@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Atmosphere } from "../components/Atmosphere";
 import { Reveal } from "../components/Reveal";
 import { PowerButton } from "../components/PowerButton";
 import { BRANCHES, WHATSAPP } from "../components/site";
-import facility from "../assets/facility.jpg";
+import { EnquiryModal } from "../components/EnquiryModal";
+import { MapPin } from "lucide-react";
+import { ImageSlideshow } from "../components/ImageSlideshow";
 
 export const Route = createFileRoute("/branches")({
   head: () => ({
@@ -15,7 +18,7 @@ export const Route = createFileRoute("/branches")({
           "Two premium Power Up Fitness clubs in Pune — Bhukum and Mahalunge. Resistance training, functional zones, recovery and expert coaching.",
       },
       { property: "og:title", content: "Our Clubs — Power Up Fitness Bhukum & Mahalunge" },
-      { property: "og:description", content: "Find your ultimate fitness sanctuary in Pune." },
+      { property: "og:description", content: "Find the nearest ultimate fitness club in Pune." },
     ],
   }),
   component: Branches,
@@ -29,6 +32,8 @@ const FEATURES = [
 ];
 
 function Branches() {
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <>
       <section className="relative overflow-hidden pt-40 pb-20">
@@ -42,8 +47,8 @@ function Branches() {
             </h1>
           </Reveal>
           <Reveal delay={120}>
-            <p className="mt-8 max-w-md text-lg text-muted-foreground">
-              Find your ultimate fitness sanctuary in Pune.
+            <p className="mt-8 max-w-md text-lg text-muted-foreground italic">
+              Find the nearest ultimate fitness club in Pune.
             </p>
           </Reveal>
         </div>
@@ -62,80 +67,83 @@ function Branches() {
                     i % 2 ? "lg:[&>*:first-child]:order-2" : ""
                   }`}
                 >
-                  <div className="relative">
+                  <div className="relative w-full max-w-xl mx-auto">
                     <div
-                      className={`overflow-hidden border transition-all duration-700 ${
-                        isUpcoming
-                          ? "rounded-[2.5rem] border-volt/40 shadow-[0_0_30px_rgba(255,222,71,0.15)]"
-                          : i % 2
-                            ? "rounded-[3rem_1rem_3rem_1rem] border-border"
-                            : "clip-arch border-border"
+                      className={`overflow-hidden border border-border/40 transition-all duration-700 shadow-xl ${
+                        i % 2 ? "rounded-[1rem_3rem_1rem_3rem]" : "rounded-[3rem_1rem_3rem_1rem]"
                       }`}
                     >
-                      <img
-                        src={facility}
+                      <ImageSlideshow
+                        images={[...b.images]}
                         alt={`Power Up Fitness ${b.name} club interior`}
-                        loading="lazy"
-                        width={1600}
-                        height={1104}
-                        className={`h-80 w-full object-cover transition-transform duration-[1.2s] hover:scale-105 ${
-                          isUpcoming ? "brightness-75 contrast-125" : ""
-                        }`}
+                        className="h-80 w-full"
                       />
                     </div>
-                    <span
-                      className={`absolute left-6 top-6 rounded-full px-4 py-2 text-[0.6rem] font-bold uppercase tracking-[0.24em] ${
-                        isUpcoming
-                          ? "bg-volt text-carbon shadow-[0_0_20px_rgba(255,222,71,0.5)]"
-                          : "glass-strong text-volt"
-                      }`}
-                    >
-                      {isUpcoming ? "Coming Soon · Upcoming Club" : `Live: ${b.occupancy}`}
-                    </span>
+                    {isUpcoming && (
+                      <span className="absolute left-6 top-6 rounded-full glass-strong border border-volt/60 bg-carbon-deep/60 backdrop-blur-md px-4 py-2 text-[0.62rem] font-bold uppercase tracking-[0.24em] text-volt shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                        Upcoming Club
+                      </span>
+                    )}
                   </div>
 
-                  <div
-                    className={`min-w-0 p-9 transition-all duration-300 ${
-                      isUpcoming
-                        ? "glass-strong bg-carbon-deep/95 border-2 border-volt/40 rounded-[2.5rem] shadow-[0_20px_50px_-15px_rgba(255,222,71,0.15)]"
-                        : "metal clip-notch"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <p className="text-[0.62rem] uppercase tracking-[0.3em] text-volt">{b.city}</p>
-                      {isUpcoming && (
-                        <span className="rounded-full bg-volt/20 border border-volt/50 px-2.5 py-0.5 text-[0.55rem] font-bold uppercase tracking-wider text-volt">
-                          Upcoming
+                  <div className="min-w-0 p-8 sm:p-9 metal clip-notch bg-gradient-to-br from-[#181818] via-[#0d0d0d] to-[#141414] border border-border/60 shadow-[0_20px_50px_rgba(0,0,0,0.85)] transition-all duration-300">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="text-[0.62rem] uppercase tracking-[0.3em] text-volt">{b.city}</p>
+                        {isUpcoming && (
+                          <span className="rounded-full bg-volt/20 border border-volt/50 px-2.5 py-0.5 text-[0.55rem] font-bold uppercase tracking-wider text-volt">
+                            Upcoming
+                          </span>
+                        )}
+                      </div>
+                      <h2 className="mt-3 font-display text-5xl sm:text-6xl leading-none">
+                        {b.name.toUpperCase()}
+                      </h2>
+                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground flex items-center gap-1.5 flex-wrap">
+                        <span>
+                          {isUpcoming
+                            ? "Baner - Sus, Pune. Upcoming premium fitness club"
+                            : b.address}
                         </span>
-                      )}
+                        {b.maps && (
+                          <a
+                            href={b.maps}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center text-volt hover:opacity-80 transition-opacity"
+                            title="Get Directions"
+                          >
+                            <MapPin className="h-4 w-4 shrink-0" />
+                          </a>
+                        )}
+                      </p>
+                      <ul className="mt-6 flex flex-wrap gap-2">
+                        {FEATURES.map((f) => (
+                          <li
+                            key={f}
+                            className="rounded-full glass px-4 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground border border-border/20 transition-all duration-300 hover:border-volt/40 hover:bg-volt/10 hover:text-volt hover:scale-[1.03] cursor-default"
+                          >
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <h2 className="mt-4 font-display text-5xl sm:text-6xl leading-none">
-                      {b.name.toUpperCase()}
-                    </h2>
-                    <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                      {isUpcoming
-                        ? "A new PowerUp experience is coming to Baner-Sus. Pre-register your interest to receive founding member updates and launch invites."
-                        : b.address}
-                    </p>
-                    <ul className="mt-7 flex flex-wrap gap-2">
-                      {FEATURES.map((f) => (
-                        <li
-                          key={f}
-                          className="rounded-full glass px-4 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-muted-foreground"
-                        >
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-9 flex flex-wrap gap-4">
+
+                    <div className="mt-8 flex flex-wrap gap-4 pt-2">
                       {isUpcoming ? (
                         <>
-                          <PowerButton to="/contact" variant="volt">
+                          <PowerButton
+                            onClick={() => setModalOpen(true)}
+                            variant="volt"
+                            className="cursor-pointer"
+                          >
                             Register Interest
                           </PowerButton>
-                          <PowerButton to="/franchise" variant="ghost">
-                            Franchise Info
-                          </PowerButton>
+                          {b.maps && (
+                            <PowerButton href={b.maps} variant="ghost">
+                              Directions
+                            </PowerButton>
+                          )}
                         </>
                       ) : (
                         <>
@@ -155,6 +163,9 @@ function Branches() {
           })}
         </div>
       </section>
+
+      {/* Enquiry Modal with direct email submission */}
+      <EnquiryModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
 
       <section className="relative overflow-hidden py-24">
         <Atmosphere variant="c" />

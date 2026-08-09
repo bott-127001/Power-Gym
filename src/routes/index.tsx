@@ -10,6 +10,8 @@ import { CoreValues } from "../components/CoreValues";
 import { BeyondWorkout } from "../components/BeyondWorkout";
 import { BRANCHES, PROGRAMS, TESTIMONIALS, WHATSAPP } from "../components/site";
 import facility from "../assets/facility.jpg";
+import { MapPin } from "lucide-react";
+import { ImageSlideshow } from "../components/ImageSlideshow";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -33,7 +35,7 @@ export const Route = createFileRoute("/")({
 const STATS = [
   { value: "18/7", label: "Working Hours" },
   { value: "5,000+", label: "Happy Members" },
-  { value: "2+", label: "Premium Branches" },
+  { value: "3", label: "Premium Branches" },
   { value: "12+", label: "In-House Trainers" },
 ];
 
@@ -80,16 +82,19 @@ function Index() {
               </h2>
             </Reveal>
             <Reveal delay={120}>
-              <p className="text-lg leading-relaxed text-muted-foreground">
-                Power Up Fitness is committed to transforming lives and building a healthier
-                community through personalised coaching and expert guidance. We offer an extensive
-                range of programs designed to fuel your transformative fitness journey.
+              <p className="text-sm sm:text-base tracking-[0.16em] text-white italic font-normal">
+                GET FITTER, STRONGER AND HEALTHIER
+              </p>
+              <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+                Power Up Fitness is committed to transforming lives and building a stronger
+                community through personalised coaching and elite biomechanics. We offer an
+                extensive range of programs designed to fuel your transformative fitness journey.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <PowerButton to="/about" variant="slab">
                   Read the story
                 </PowerButton>
-                <PowerButton href={WHATSAPP} variant="ghost">
+                <PowerButton to="/contact" variant="ghost">
                   Become a member
                 </PowerButton>
               </div>
@@ -99,7 +104,7 @@ function Index() {
           <div className="mt-20 grid grid-cols-2 gap-4 sm:grid-cols-4">
             {STATS.map((s, i) => (
               <Reveal key={s.label} delay={i * 80}>
-                <div className="metal p-7">
+                <div className="metal p-7 text-center">
                   <p className="text-[0.62rem] uppercase tracking-[0.28em] text-volt">{s.label}</p>
                   <p className="mt-4 font-display text-4xl sm:text-5xl leading-none text-foreground">
                     {s.value}
@@ -126,7 +131,7 @@ function Index() {
         <div className="relative mx-auto max-w-6xl px-6">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <Reveal>
-              <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt">Pune Locations</p>
+              <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt">Locations</p>
               <h2 className="mt-3 font-display text-[clamp(3.2rem,8vw,6.5rem)] leading-[0.82]">
                 OUR <span className="text-volt">CLUBS</span>
               </h2>
@@ -165,35 +170,16 @@ function Index() {
 
           <div className="mt-14 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             <Reveal>
-              <div className="relative overflow-hidden rounded-3xl border border-border/40 aspect-4/3 sm:aspect-16/10">
-                <img
-                  src={facility}
+              <div className="relative overflow-hidden rounded-3xl border border-border/50 aspect-4/3 sm:aspect-16/10 shadow-2xl">
+                <ImageSlideshow
+                  images={[...branch.images]}
                   alt={`Power Up Fitness ${branch.name}`}
-                  className={`h-full w-full object-cover transition-transform duration-700 hover:scale-105 ${
-                    branch.status === "upcoming" ? "brightness-75 contrast-125" : ""
-                  }`}
-                  loading="lazy"
+                  className="h-full w-full"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-carbon-deep via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+                <div className="absolute inset-0 bg-linear-to-t from-carbon-deep/90 via-carbon-deep/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between pointer-events-none">
                   <div>
-                    <span
-                      className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.28em] ${
-                        branch.status === "upcoming"
-                          ? "bg-volt text-carbon font-bold shadow-[0_0_15px_rgba(255,222,71,0.5)]"
-                          : "glass text-volt"
-                      }`}
-                    >
-                      <span
-                        className={`h-1.5 w-1.5 rounded-full ${
-                          branch.status === "upcoming" ? "bg-carbon animate-pulse" : "bg-volt animate-pulse"
-                        }`}
-                      />
-                      {branch.status === "upcoming"
-                        ? "Upcoming Club · Coming Soon"
-                        : `Live Occupancy: ${branch.occupancy}`}
-                    </span>
-                    <h3 className="mt-2 font-display text-4xl leading-none">
+                    <h3 className="font-display text-4xl sm:text-5xl leading-none drop-shadow-md">
                       POWER UP <span className="text-volt">{branch.name.toUpperCase()}</span>
                     </h3>
                   </div>
@@ -202,7 +188,7 @@ function Index() {
             </Reveal>
 
             <Reveal delay={120}>
-              <div className="flex h-full flex-col justify-between gap-8 rounded-3xl glass-strong p-8 sm:p-10">
+              <div className="flex h-full flex-col justify-between gap-8 rounded-3xl p-8 sm:p-10 bg-gradient-to-br from-[#181818] via-[#0d0d0d] to-[#141414] border border-border/60 shadow-[0_20px_50px_rgba(0,0,0,0.85)]">
                 <div>
                   <div className="flex items-center gap-2">
                     <p className="text-[0.65rem] uppercase tracking-[0.3em] text-volt">Address</p>
@@ -212,10 +198,23 @@ function Index() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-3 text-lg leading-relaxed text-foreground/90">
-                    {branch.status === "upcoming"
-                      ? "A new PowerUp experience is coming to Baner-Sus, Pune. Register your interest below to receive opening announcements and founding member passes."
-                      : branch.address}
+                  <p className="mt-3 text-lg leading-relaxed text-foreground/90 flex items-center gap-1.5 flex-wrap">
+                    <span>
+                      {branch.status === "upcoming"
+                        ? "Baner - Sus, Pune. Upcoming premium fitness facility"
+                        : branch.address}
+                    </span>
+                    {branch.maps && (
+                      <a
+                        href={branch.maps}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center text-volt hover:opacity-80 transition-opacity"
+                        title="Get Directions"
+                      >
+                        <MapPin className="h-5 w-5 shrink-0" />
+                      </a>
+                    )}
                   </p>
                 </div>
 
@@ -239,12 +238,18 @@ function Index() {
                 <div className="flex flex-wrap gap-4">
                   {branch.status === "upcoming" ? (
                     <>
-                      <PowerButton to="/contact" variant="volt">
+                      <PowerButton
+                        onClick={() => setIsEnquiryOpen(true)}
+                        variant="volt"
+                        className="cursor-pointer"
+                      >
                         Register Interest
                       </PowerButton>
-                      <PowerButton to="/franchise" variant="ghost">
-                        Franchise Info
-                      </PowerButton>
+                      {branch.maps && (
+                        <PowerButton href={branch.maps} variant="ghost">
+                          Directions
+                        </PowerButton>
+                      )}
                     </>
                   ) : (
                     <>

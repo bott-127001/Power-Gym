@@ -121,9 +121,8 @@ function About() {
             </h1>
           </Reveal>
           <Reveal delay={120}>
-            <p className="mt-8 max-w-2xl text-base sm:text-xl text-muted-foreground leading-relaxed">
-              Transforming lives and building a healthier community through elite coaching,
-              biomechanical precision, and an uncompromised standard of fitness excellence.
+            <p className="mt-8 max-w-2xl text-base sm:text-xl text-white italic font-normal tracking-wide">
+              GET FITTER, STRONGER AND HEALTHIER
             </p>
           </Reveal>
         </div>
@@ -134,7 +133,7 @@ function About() {
         <Atmosphere variant="c" />
         <div className="relative mx-auto grid max-w-6xl gap-16 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <Reveal>
-            <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt font-bold">
+            <p className="text-xl sm:text-2xl text-[24px] uppercase tracking-[0.2em] text-volt font-bold">
               The Heritage
             </p>
             <h2 className="mt-3 font-display text-[clamp(2.8rem,7vw,5rem)] leading-[0.82] uppercase text-white">
@@ -188,7 +187,7 @@ function About() {
         <Atmosphere variant="d" />
         <div className="relative mx-auto max-w-6xl px-6">
           <Reveal>
-            <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt font-bold text-center">
+            <p className="text-xl sm:text-2xl text-[24px] uppercase tracking-[0.2em] text-volt font-bold text-center">
               Purpose & Direction
             </p>
             <h2 className="mt-3 font-display text-[clamp(2.8rem,7vw,5.5rem)] leading-[0.85] text-center text-white uppercase">
@@ -214,7 +213,7 @@ function About() {
                     OUR MISSION
                   </h3>
 
-                  <p className="mt-6 text-sm sm:text-base leading-relaxed text-neutral-300 font-normal">
+                  <p className="mt-6 text-base sm:text-lg leading-relaxed text-neutral-300 font-normal">
                     Our mission is to empower individuals to lead healthier, stronger, and more
                     confident lives by providing world-class fitness facilities, expert guidance,
                     and a supportive community that makes fitness accessible and sustainable for
@@ -246,7 +245,7 @@ function About() {
                     OUR VISION
                   </h3>
 
-                  <p className="mt-6 text-sm sm:text-base leading-relaxed text-neutral-300 font-normal">
+                  <p className="mt-6 text-base sm:text-lg leading-relaxed text-neutral-300 font-normal">
                     To be the undisputed leader in premium fitness across Pune, recognized for
                     uncompromised quality, elite coaching, and architectural excellence.
                   </p>
@@ -267,7 +266,7 @@ function About() {
         <Atmosphere variant="a" />
         <div className="relative mx-auto max-w-6xl px-6">
           <Reveal>
-            <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt font-bold text-center">
+            <p className="text-xl sm:text-2xl text-[24px] uppercase tracking-[0.2em] text-volt font-bold text-center">
               The Six Principles
             </p>
             <h2 className="mt-3 font-display text-[clamp(2.8rem,7vw,5.5rem)] leading-[0.85] text-center text-white uppercase">
@@ -299,7 +298,7 @@ function About() {
                         {val.title}
                       </h3>
 
-                      <p className="mt-3 text-xs sm:text-sm leading-relaxed text-muted-foreground">
+                      <p className="mt-3 text-base sm:text-lg leading-relaxed text-muted-foreground">
                         {val.copy}
                       </p>
                     </div>
@@ -321,7 +320,7 @@ function About() {
         <Atmosphere variant="c" />
         <div className="relative mx-auto max-w-4xl px-6">
           <Reveal>
-            <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt font-bold">
+            <p className="text-xl sm:text-2xl text-[24px] uppercase tracking-[0.2em] text-volt font-bold">
               Facility Standard
             </p>
             <h2 className="mt-3 font-display text-[clamp(2.8rem,7vw,5rem)] leading-[0.82] uppercase text-white">
@@ -340,7 +339,7 @@ function About() {
                   <h3 className="font-display text-2xl sm:text-3xl uppercase font-black text-white group-hover:text-volt transition-colors">
                     {title}
                   </h3>
-                  <p className="mt-2 max-w-lg text-xs sm:text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-2 max-w-lg text-base sm:text-lg leading-relaxed text-muted-foreground">
                     {copy}
                   </p>
                 </div>

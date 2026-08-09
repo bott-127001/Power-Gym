@@ -9,6 +9,9 @@ export const NAV = [
   { to: "/contact", label: "Contact" },
 ] as const;
 
+import facility from "../assets/facility.jpg";
+import hero from "../assets/hero.jpg";
+
 // ───────────── POWERUP BRANCHES (2 ACTIVE + 1 UPCOMING) ─────────────
 export const BRANCHES = [
   {
@@ -21,7 +24,10 @@ export const BRANCHES = [
     whatsappNumber: "918446588173",
     occupancy: "MODERATE",
     address: "Skyi Manas, Lake City, Bhukum, Maharashtra 412115",
+    shortAddress: "Skyi Manas",
     maps: "https://maps.google.com/?q=Power+Up+Fitness+Bhukum+Pune",
+    image: "/Bhukum.jpg",
+    images: ["/Bhukum.jpg", facility, hero, "/Mahalunge.jpg"],
   },
   {
     id: "mahalunge",
@@ -29,11 +35,14 @@ export const BRANCHES = [
     fullName: "Mahalunge Club",
     city: "Pune",
     status: "active" as const,
-    phone: "+918446588173",
-    whatsappNumber: "918446588173",
+    phone: "+918446588174",
+    whatsappNumber: "918446588174",
     occupancy: "LOW",
     address: "21, Opp. Godrej Green Cove, near VTP Circle, Mahalunge, Pune",
+    shortAddress: "Near VTP Circle",
     maps: "https://maps.google.com/?q=Power+Up+Fitness+Mahalunge+Pune",
+    image: "/Mahalunge.jpg",
+    images: ["/Mahalunge.jpg", facility, hero, "/Bhukum.jpg"],
   },
   {
     id: "baner-sus",
@@ -41,24 +50,24 @@ export const BRANCHES = [
     fullName: "Baner-Sus Club",
     city: "Pune",
     status: "upcoming" as const,
-    phone: null,
-    whatsappNumber: null,
+    phone: "+919923899499",
+    whatsappNumber: "919923899499",
     occupancy: "COMING SOON",
     address: "Baner - Sus, Pune, Maharashtra",
-    maps: null,
+    shortAddress: "Baner - Sus",
+    maps: "https://maps.google.com/?q=Power+Up+Fitness+Baner+Sus+Pune",
+    image: facility,
+    images: [facility, hero, "/Bhukum.jpg", "/Mahalunge.jpg"],
   },
 ] as const;
 
 export type BranchId = (typeof BRANCHES)[number]["id"];
 
 export const ENQUIRY_GOALS = [
+  "Free Trial",
   "Membership & Plans",
-  "Free Trial Session",
-  "Personal Training / Coaching",
-  "Franchise Opportunity / Partnership",
-  "Fat Loss / Weight Management",
-  "Muscle Gain & Hypertrophy",
-  "General Fitness & Biomechanics",
+  "Short Session",
+  "Franchise",
 ] as const;
 
 /**

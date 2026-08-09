@@ -156,7 +156,7 @@ export function BeyondWorkout() {
                       </p>
 
                       {/* Final Editorial Statement */}
-                      <div className="mt-8 pt-6 border-t border-border/30 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs font-mono uppercase tracking-[0.22em] text-volt">
+                      <div className="mt-6 pt-5 border-t border-border/20 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs font-mono uppercase tracking-[0.22em] text-volt">
                         <span>THE WORKOUT CHANGES YOUR BODY.</span>
                         <span className="hidden sm:inline text-neutral-600">·</span>
                         <span>THE JOURNEY CHANGES YOU.</span>
@@ -288,17 +288,6 @@ function JourneyCard({
 
         {/* Copy */}
         <p className="mt-3 text-xs sm:text-sm text-neutral-400 leading-relaxed">{stage.copy}</p>
-      </div>
-
-      {/* Bottom Accent Track */}
-      <div className="mt-6 pt-4 border-t border-border/30 flex items-center justify-between">
-        <span className="text-[0.6rem] font-mono uppercase tracking-wider text-neutral-500">
-          Phase {stage.num} of 05
-        </span>
-        <div className="flex items-center gap-1">
-          <span className="h-1.5 w-1.5 rounded-full bg-volt/40 group-hover:bg-volt transition-colors" />
-          <span className="h-1.5 w-4 rounded-full bg-border/60 group-hover:bg-volt transition-colors" />
-        </div>
       </div>
     </div>
   );

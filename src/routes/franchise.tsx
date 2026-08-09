@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Atmosphere } from "../components/Atmosphere";
 import { Reveal } from "../components/Reveal";
 import { PowerButton } from "../components/PowerButton";
@@ -61,10 +61,10 @@ export const Route = createFileRoute("/franchise")({
 // ───────────── DATA FROM 13-PAGE PDF PROSPECTUS ─────────────
 
 const MARKET_PROJECTIONS = [
-  { year: "2024", size: "₹16,200", height: "43%" },
-  { year: "2026", size: "₹21,425", height: "57%" },
-  { year: "2028", size: "₹28,334", height: "75%" },
-  { year: "2030", size: "₹37,700", height: "100%", isPeak: true },
+  { year: "2024", size: "₹16,200", raw: 16200, height: "42%" },
+  { year: "2026", size: "₹21,425", raw: 21425, height: "56%" },
+  { year: "2028", size: "₹28,334", raw: 28334, height: "74%" },
+  { year: "2030", size: "₹37,700", raw: 37700, height: "98%", isPeak: true },
 ];
 
 const TAILWINDS = [
@@ -274,7 +274,6 @@ function Franchise() {
         <div className="relative mx-auto max-w-6xl px-6">
           <Reveal>
             <div className="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-volt">
-              <span className="h-1.5 w-1.5 rounded-full bg-volt animate-pulse" />
               Franchise Investment Opportunity
             </div>
             <h1 className="mt-6 font-display text-[clamp(3.5rem,10vw,8.5rem)] leading-[0.8] tracking-tight uppercase">
@@ -284,8 +283,8 @@ function Franchise() {
           </Reveal>
 
           <Reveal delay={100}>
-            <p className="mt-6 font-display text-xl sm:text-2xl uppercase tracking-wider text-volt">
-              &ldquo;Get fitter, stronger and healthier.&rdquo;
+            <p className="mt-6 text-xl sm:text-2xl tracking-wide text-white italic font-normal">
+              &ldquo;Get fitter, stronger and healthier&rdquo;
             </p>
             <p className="mt-4 max-w-2xl text-base sm:text-xl text-muted-foreground leading-relaxed">
               Own a proven, community-driven gym brand in one of India&apos;s fastest-growing
@@ -296,34 +295,35 @@ function Franchise() {
           {/* Key Stat Cards (PDF Slide 01) */}
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6">
             <Reveal delay={150}>
-              <div className="rounded-3xl glass-strong bg-carbon-deep/80 border border-border/40 p-6">
-                <span className="font-display text-5xl sm:text-6xl font-black text-white">2 + 1</span>
-                <p className="mt-2 text-xs font-bold uppercase tracking-[0.24em] text-volt font-display">
+              <div className="rounded-3xl glass-strong bg-carbon-deep/80 border border-border/40 p-6 flex flex-col justify-center">
+                <span className="font-display text-5xl sm:text-6xl font-black text-white leading-none">
+                  3
+                </span>
+                <p className="mt-3 text-xs font-bold uppercase tracking-[0.24em] text-volt font-display">
                   Clubs in Pune
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">2 Active + 1 Upcoming (Baner-Sus)</p>
               </div>
             </Reveal>
 
             <Reveal delay={200}>
-              <div className="rounded-3xl glass-strong bg-carbon-deep/80 border border-border/40 p-6">
-                <span className="font-display text-5xl sm:text-6xl font-black text-white">
+              <div className="rounded-3xl glass-strong bg-carbon-deep/80 border border-border/40 p-6 flex flex-col justify-center">
+                <span className="font-display text-5xl sm:text-6xl font-black text-white leading-none">
                   5,000+
                 </span>
-                <p className="mt-2 text-xs font-bold uppercase tracking-[0.24em] text-volt font-display">
+                <p className="mt-3 text-xs font-bold uppercase tracking-[0.24em] text-volt font-display">
                   Active Members
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">High daily community retention</p>
               </div>
             </Reveal>
 
             <Reveal delay={250}>
-              <div className="rounded-3xl glass-strong bg-carbon-deep/80 border border-border/40 p-6">
-                <span className="font-display text-5xl sm:text-6xl font-black text-volt">15%</span>
-                <p className="mt-2 text-xs font-bold uppercase tracking-[0.24em] text-volt font-display">
+              <div className="rounded-3xl glass-strong bg-carbon-deep/80 border border-border/40 p-6 flex flex-col justify-center">
+                <span className="font-display text-5xl sm:text-6xl font-black text-volt leading-none">
+                  15%
+                </span>
+                <p className="mt-3 text-xs font-bold uppercase tracking-[0.24em] text-volt font-display">
                   Industry CAGR
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">India Fitness Market 2024–2030</p>
               </div>
             </Reveal>
           </div>
@@ -346,7 +346,9 @@ function Franchise() {
         <Atmosphere variant="a" />
         <div className="relative mx-auto max-w-6xl px-6">
           <Reveal>
-            <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt">The Opportunity</p>
+            <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt">
+              The Opportunity
+            </p>
             <h2 className="mt-3 font-display text-[clamp(2.8rem,7.5vw,5.5rem)] leading-[0.85] text-white">
               INDIA&apos;S FITNESS INDUSTRY IS SET TO <br />
               <span className="text-volt">MORE THAN DOUBLE BY 2030</span>
@@ -356,43 +358,7 @@ function Franchise() {
           <div className="mt-16 grid gap-10 lg:grid-cols-2 items-center">
             {/* Market Growth Visual Chart (Slide 02) */}
             <Reveal delay={100}>
-              <div className="rounded-[2.5rem] glass-strong bg-carbon-deep/90 border border-border/40 p-8 sm:p-10">
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-volt">
-                  Fitness Market Size in ₹ Crore • ~15% CAGR (2024–2030)
-                </p>
-
-                {/* Bar Chart Container */}
-                <div className="mt-10 flex items-end justify-between gap-4 h-64 pt-8 border-b border-border/40">
-                  {MARKET_PROJECTIONS.map((p) => (
-                    <div
-                      key={p.year}
-                      className="flex-1 flex flex-col items-center h-full justify-end group"
-                    >
-                      <span
-                        className={`text-xs font-mono font-bold mb-2 ${p.isPeak ? "text-volt" : "text-neutral-400"}`}
-                      >
-                        {p.size}
-                      </span>
-                      <div
-                        style={{ height: p.height }}
-                        className={`w-full rounded-t-xl transition-all duration-700 ${
-                          p.isPeak
-                            ? "bg-volt shadow-[0_0_20px_rgba(255,222,71,0.5)]"
-                            : "bg-linear-to-t from-white/30 via-white/70 to-white opacity-90 group-hover:opacity-100 shadow-[0_0_15px_rgba(255,255,255,0.15)]"
-                        }`}
-                      />
-                      <span className="mt-3 text-xs font-bold font-mono text-muted-foreground">
-                        {p.year}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <p className="mt-6 text-[0.65rem] text-muted-foreground/70 text-right">
-                  Source: India Fitness Market Report 2025, Deloitte India & Health and Fitness
-                  Association (HFA).
-                </p>
-              </div>
+              <MarketGrowthChart />
             </Reveal>
 
             {/* 3 Metric Highlights */}
@@ -452,7 +418,7 @@ function Franchise() {
         <Atmosphere variant="d" />
         <div className="relative mx-auto max-w-6xl px-6">
           <Reveal>
-            <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt">
+            <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt">
               The Right Time To Invest
             </p>
             <h2 className="mt-3 font-display text-[clamp(2.8rem,7.5vw,5.5rem)] leading-[0.85] text-white">
@@ -494,7 +460,9 @@ function Franchise() {
             {/* Left: Brand & Locations */}
             <div>
               <Reveal>
-                <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt">The Brand</p>
+                <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt">
+                  The Brand
+                </p>
                 <h2 className="mt-3 font-display text-[clamp(2.8rem,7.5vw,5.5rem)] leading-[0.85] text-white">
                   A PROVEN FITNESS BRAND, <br />
                   <span className="text-volt">BUILT IN PUNE&apos;S PRIME REGION</span>
@@ -549,18 +517,18 @@ function Franchise() {
 
             {/* Right: 9 Offerings Full Stack */}
             <div className="rounded-[2.5rem] glass-strong bg-carbon-deep/90 border border-border/40 p-8 sm:p-10">
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-volt font-display">
+              <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt font-display">
                 What Every PowerUp Gym Includes
               </p>
               <h3 className="mt-2 font-display text-3xl text-white">FULL-SERVICE STACK</h3>
 
-              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div className="mt-8 flex flex-col gap-3">
                 {OFFERINGS.map((off) => (
                   <div
                     key={off}
-                    className="flex items-center gap-3 rounded-2xl bg-black/40 border border-border/30 px-4 py-3 text-xs font-semibold text-neutral-300"
+                    className="flex items-center gap-3.5 rounded-2xl bg-black/40 border border-border/30 px-5 py-3.5 text-base sm:text-lg text-[18px] font-semibold text-neutral-200 transition-colors hover:border-volt/50 hover:text-white"
                   >
-                    <CheckCircle2 className="h-4 w-4 text-volt shrink-0" />
+                    <CheckCircle2 className="h-5 w-5 text-volt shrink-0" />
                     <span>{off}</span>
                   </div>
                 ))}
@@ -575,7 +543,7 @@ function Franchise() {
         <Atmosphere variant="c" />
         <div className="relative mx-auto max-w-6xl px-6">
           <Reveal>
-            <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt">
+            <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt">
               What Sets Us Apart
             </p>
             <h2 className="mt-3 font-display text-[clamp(2.8rem,7.5vw,5.5rem)] leading-[0.85] text-white">
@@ -621,7 +589,7 @@ function Franchise() {
         <Atmosphere variant="a" />
         <div className="relative mx-auto max-w-6xl px-6">
           <Reveal>
-            <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt">
+            <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt">
               The Business Model
             </p>
             <h2 className="mt-3 font-display text-[clamp(2.8rem,7.5vw,5.5rem)] leading-[0.85] text-white">
@@ -668,7 +636,7 @@ function Franchise() {
         <Atmosphere variant="d" />
         <div className="relative mx-auto max-w-6xl px-6">
           <Reveal>
-            <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt font-bold">
+            <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt">
               WHAT IT TAKES
             </p>
             <h2 className="mt-3 font-display text-[clamp(2.8rem,7.5vw,5.5rem)] leading-[0.85] text-white uppercase">
@@ -795,7 +763,7 @@ function Franchise() {
         <Atmosphere variant="b" />
         <div className="relative mx-auto max-w-6xl px-6">
           <Reveal>
-            <p className="text-[0.65rem] uppercase tracking-[0.34em] text-volt">
+            <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt">
               You&apos;re Not Alone
             </p>
             <h2 className="mt-3 font-display text-[clamp(2.8rem,7.5vw,5.5rem)] leading-[0.85] text-white">
@@ -851,7 +819,7 @@ function Franchise() {
         <div className="relative mx-auto grid max-w-6xl gap-10 px-6 lg:grid-cols-[1.05fr_0.95fr]">
           <Reveal>
             <form onSubmit={handleSubmit} className="clay rounded-[2.5rem] p-8 sm:p-10">
-              <p className="text-[0.62rem] uppercase tracking-[0.3em] text-volt">
+              <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt">
                 Franchise Application
               </p>
               <h3 className="mt-3 font-display text-3xl sm:text-4xl leading-none text-foreground">
@@ -1013,7 +981,7 @@ function Franchise() {
           <div className="space-y-6">
             <Reveal delay={100}>
               <div className="metal clip-angled p-9">
-                <p className="text-[0.62rem] uppercase tracking-[0.3em] text-volt">
+                <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt">
                   Let&apos;s Build It Together
                 </p>
                 <h3 className="mt-3 font-display text-4xl leading-tight text-white">
@@ -1064,5 +1032,139 @@ function Franchise() {
         </div>
       </section>
     </>
+  );
+}
+
+function MarketGrowthChart() {
+  const chartRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = chartRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={chartRef}
+      className="rounded-[2.5rem] glass-strong bg-carbon-deep/90 border border-border/40 p-7 sm:p-10 shadow-2xl"
+    >
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-volt">
+          Fitness Market Size in ₹ Crore • ~15% CAGR
+        </p>
+        <span className="rounded-full bg-volt/20 border border-volt/40 px-2.5 py-0.5 text-[0.58rem] font-mono font-bold text-volt uppercase tracking-wider">
+          2024–2030
+        </span>
+      </div>
+
+      {/* Bar Chart Container with increased height */}
+      <div className="mt-8 flex items-end justify-between gap-3 sm:gap-6 h-72 sm:h-88 pt-10 border-b border-border/40 pb-0">
+        {MARKET_PROJECTIONS.map((p, idx) => (
+          <MarketBar key={p.year} projection={p} active={inView} index={idx} />
+        ))}
+      </div>
+
+      <p className="mt-6 text-[0.65rem] text-muted-foreground/70 text-right">
+        Source: India Fitness Market Report 2025, Deloitte India & Health and Fitness Association
+        (HFA).
+      </p>
+    </div>
+  );
+}
+
+function MarketBar({
+  projection,
+  active,
+  index,
+}: {
+  projection: (typeof MARKET_PROJECTIONS)[number];
+  active: boolean;
+  index: number;
+}) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!active) return;
+
+    let start = 0;
+    const end = projection.raw;
+    const duration = 1500 + index * 150;
+    const startTime = performance.now();
+
+    const frame = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // easeOutCubic
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(start + (end - start) * ease);
+      setCount(current);
+
+      if (progress < 1) {
+        requestAnimationFrame(frame);
+      }
+    };
+
+    const timer = setTimeout(() => {
+      requestAnimationFrame(frame);
+    }, index * 120);
+
+    return () => clearTimeout(timer);
+  }, [active, index, projection.raw]);
+
+  const formattedCount =
+    count === 0 ? "₹0" : `₹${count.toLocaleString("en-IN")}`;
+
+  return (
+    <div className="flex-1 flex flex-col items-center h-full justify-end group">
+      {/* Number Value Label on top of bar */}
+      <span
+        className={`text-[0.68rem] sm:text-sm font-mono font-bold mb-2.5 transition-all duration-700 whitespace-nowrap ${
+          projection.isPeak
+            ? "text-volt font-black scale-105"
+            : "text-neutral-300"
+        } ${active ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
+      >
+        {active ? formattedCount : "₹0"}
+      </span>
+
+      {/* Bar Column with rising animation */}
+      <div className="w-full h-full flex items-end">
+        <div
+          style={{
+            height: active ? projection.height : "0%",
+            transitionDuration: `${1300 + index * 150}ms`,
+            transitionDelay: `${index * 120}ms`,
+          }}
+          className={`w-full rounded-t-xl sm:rounded-t-2xl transition-all ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            projection.isPeak
+              ? "bg-volt shadow-md border-t-2 border-white/50"
+              : "bg-linear-to-t from-white/25 via-white/75 to-white opacity-90 group-hover:opacity-100 shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+          }`}
+        />
+      </div>
+
+      {/* Year Label below bar */}
+      <span
+        className={`mt-3 text-xs sm:text-sm font-bold font-mono transition-colors ${
+          projection.isPeak ? "text-volt font-black" : "text-muted-foreground"
+        }`}
+      >
+        {projection.year}
+      </span>
+    </div>
   );
 }

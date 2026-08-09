@@ -299,18 +299,26 @@ function Contact() {
                 >
                   +91 84465 88173
                 </a>
-                <div className="mt-8 space-y-5 text-sm text-muted-foreground">
+                <div className="mt-8 space-y-6 text-sm text-muted-foreground">
                   {BRANCHES.map((b) => (
-                    <div key={b.id}>
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-foreground">{b.name}</span>
+                    <div key={b.id} className="border-b border-border/20 pb-4 last:border-b-0 last:pb-0">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-foreground">{b.name} Club</span>
                         {b.status === "upcoming" && (
                           <span className="rounded-full bg-volt/20 border border-volt/50 px-2 py-0.5 text-[0.55rem] font-bold uppercase tracking-wider text-volt">
                             Coming Soon
                           </span>
                         )}
                       </div>
-                      <p className="mt-0.5">{b.address}</p>
+                      <p className="mt-1 text-xs">{b.address}</p>
+                      {b.phone && (
+                        <a
+                          href={`tel:${b.phone}`}
+                          className="mt-2 inline-flex items-center gap-1.5 text-xs font-mono font-bold text-volt hover:underline"
+                        >
+                          {b.phone}
+                        </a>
+                      )}
                     </div>
                   ))}
                 </div>

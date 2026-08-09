@@ -259,7 +259,7 @@ export function FranchisePathRoadmap() {
                           <Icon className="h-5 w-5" />
                         </div>
                         <div>
-                          <p className="text-[0.58rem] font-bold uppercase tracking-[0.22em] text-volt">
+                          <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.18em] text-volt font-display">
                             {step.category}
                           </p>
                           <h3 className="font-display text-xl sm:text-2xl font-bold uppercase text-white">
@@ -329,7 +329,7 @@ function RoadmapCard({ step, isLeft }: { step: PathStep; isLeft: boolean }) {
       </div>
 
       {/* Category Tag */}
-      <p className="mt-4 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-volt font-display">
+      <p className="mt-4 text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.18em] text-volt font-display">
         {step.category}
       </p>
 

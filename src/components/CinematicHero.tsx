@@ -245,9 +245,6 @@ export function CinematicHero() {
           0.18,
         );
 
-      // Subtle background vignette lighting during scrub
-      scrollTl.to(overlay, { opacity: 0.3, ease: "none", duration: 0.2 }, 0.22);
-
       // STATE 2 (BUILT DIFFERENT.): Enters at 0.22 -> 0.30 (immediate cross-fade, NO GAP!), holds until 0.46, cross-fades out at 0.46 -> 0.54
       scrollTl
         .fromTo(
@@ -308,7 +305,10 @@ export function CinematicHero() {
         <Atmosphere variant="a" />
 
         {/* ───────────── HTML5 FULL-SCREEN CANVAS ───────────── */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div
+          className="absolute inset-0 overflow-hidden bg-cover bg-center"
+          style={{ backgroundImage: "url('/hero-frames/frame_0001.jpg')" }}
+        >
           <canvas ref={canvasRef} className="absolute inset-0 h-full w-full block object-cover" />
 
           {/* Cinematic lighting & gradient overlay */}
@@ -340,9 +340,8 @@ export function CinematicHero() {
         <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-16 sm:pt-20 md:pt-24 pb-3 sm:pb-6 pointer-events-none [padding-top:max(4.25rem,calc(env(safe-area-inset-top)+3.5rem))] [padding-bottom:max(0.5rem,env(safe-area-inset-bottom))]">
           {/* ──── ZONE 1: TOP HUD / NAV ANCHOR ──── */}
           <div ref={hudTopRef} className="shrink-0 flex items-center justify-between gap-4">
-            <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 sm:px-4 sm:py-1.5 text-[0.55rem] sm:text-[0.65rem] font-semibold uppercase tracking-[0.22em] sm:tracking-[0.32em] text-volt pointer-events-auto">
-              <span className="h-1.5 w-1.5 rounded-full bg-volt animate-pulse" />
-              Hard work pays off
+            <div className="inline-flex items-center gap-2 rounded-full glass px-3.5 py-1.5 sm:px-4 sm:py-1.5 text-[0.55rem] sm:text-[0.65rem] font-bold uppercase tracking-[0.22em] sm:tracking-[0.28em] text-volt pointer-events-auto">
+              Showup. Grind. Repeat.
             </div>
           </div>
 
@@ -350,17 +349,16 @@ export function CinematicHero() {
           <div className="flex-1 min-h-0 relative my-auto w-full max-w-3xl lg:max-w-4xl py-2 sm:py-4 flex flex-col justify-center">
             {/* STATE 1: ORIGINAL OPENING SCREEN (POWERUP FITNESS) */}
             <div ref={state1Ref} className="w-full">
-              <h1 className="font-display font-black text-[clamp(2.3rem,6.8vw,8.5rem)] leading-[0.84] sm:leading-[0.82] tracking-tight uppercase select-none drop-shadow-[0_10px_35px_rgba(0,0,0,0.85)]">
+              <h1 className="font-display font-black text-[clamp(2.3rem,6.8vw,8.5rem)] leading-[0.84] sm:leading-[0.82] tracking-tight uppercase select-none">
                 POWER
-                <span className="text-volt-gradient drop-shadow-[0_0_40px_rgba(255,222,71,0.3)]">
+                <span className="text-volt-gradient">
                   UP
                 </span>{" "}
                 <span className="text-foreground/95 inline-block">FITNESS</span>
               </h1>
 
-              <p className="mt-2.5 sm:mt-4 md:mt-6 max-w-md sm:max-w-lg md:max-w-xl text-xs sm:text-base md:text-xl font-normal leading-relaxed text-foreground/85 drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
-                Your ultimate fitness destination. Next-level biomechanics, elite coaching, and a
-                community built on progression.
+              <p className="mt-2.5 sm:mt-4 md:mt-6 max-w-md sm:max-w-lg md:max-w-xl text-xs sm:text-base md:text-xl font-normal italic uppercase tracking-wider leading-relaxed text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+                GET FITTER, STRONGER AND HEALTHIER
               </p>
             </div>
 
@@ -370,7 +368,7 @@ export function CinematicHero() {
               className="absolute inset-0 flex flex-col justify-center pointer-events-none opacity-0"
             >
               <h2 className="font-display font-black text-[clamp(2.3rem,6.8vw,8rem)] leading-[0.86] tracking-tight uppercase select-none text-foreground drop-shadow-[0_10px_35px_rgba(0,0,0,0.95)]">
-                BUILT DIFFERENT<span className="text-volt">.</span>
+                BUILT DIFFERENT
               </h2>
 
               <p className="mt-2 sm:mt-3.5 max-w-md sm:max-w-lg md:max-w-xl text-xs sm:text-base md:text-xl font-normal tracking-wide text-foreground/85 leading-relaxed drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
@@ -394,11 +392,11 @@ export function CinematicHero() {
                 <div className="py-1 sm:py-2">
                   <div
                     ref={state3LineRef}
-                    className="h-1 sm:h-1.5 w-16 sm:w-32 md:w-40 bg-volt origin-left rounded-full shadow-[0_0_20px_rgba(255,222,71,0.8)]"
+                    className="h-1 sm:h-1.5 w-16 sm:w-32 md:w-40 bg-volt origin-left rounded-full shadow-sm"
                   />
                 </div>
                 <p className="font-display font-black text-[clamp(1.75rem,5vw,5.5rem)] leading-[0.88] tracking-tight uppercase text-foreground drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]">
-                  A BETTER <span className="text-volt">YOU.</span>
+                  A BETTER <span className="text-volt">YOU</span>
                 </p>
               </div>
             </div>
@@ -436,8 +434,8 @@ export function CinematicHero() {
                 <span className="relative flex h-4 w-2.5 sm:h-5 sm:w-3 items-start justify-center rounded-full border border-muted-foreground/40 p-0.5">
                   <span className="h-1 w-1 rounded-full bg-volt animate-bounce" />
                 </span>
-                <span className="hidden xs:inline">Scroll to scrub transformation</span>
-                <span className="xs:hidden">Scroll to scrub</span>
+                <span className="hidden xs:inline">Scroll to surf transformation</span>
+                <span className="xs:hidden">Scroll to surf</span>
               </div>
               {/* Progress track bar */}
               <div className="h-1 w-24 sm:w-44 rounded-full bg-white/10 overflow-hidden">
@@ -452,20 +450,20 @@ export function CinematicHero() {
             {/* Quick Live Stats Badge */}
             <div
               ref={badgeRef}
-              className="pointer-events-auto flex items-center gap-2.5 sm:gap-4 rounded-xl sm:rounded-2xl glass px-2.5 py-1 sm:px-4 sm:py-2 text-left"
+              className="pointer-events-auto flex items-center gap-2 sm:gap-4 rounded-xl sm:rounded-2xl glass px-2 py-1 sm:px-4 sm:py-2 text-left mr-12 xs:mr-14 sm:mr-16 md:mr-20"
             >
               <div>
-                <p className="font-display text-lg sm:text-2xl leading-none text-volt">2,000+</p>
-                <p className="text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-muted-foreground">
-                  Athletes
+                <p className="font-display text-base xs:text-lg sm:text-2xl leading-none text-volt">5,000+</p>
+                <p className="text-[0.45rem] xs:text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.12em] sm:tracking-[0.2em] text-muted-foreground mt-0.5 sm:mt-1">
+                  Members
                 </p>
               </div>
-              <div className="h-5 sm:h-7 w-px bg-border/40" />
+              <div className="h-4 sm:h-7 w-px bg-border/40" />
               <div>
-                <p className="font-display text-lg sm:text-2xl leading-none text-foreground">
+                <p className="font-display text-base xs:text-lg sm:text-2xl leading-none text-foreground">
                   18/7
                 </p>
-                <p className="text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-muted-foreground">
+                <p className="text-[0.45rem] xs:text-[0.5rem] sm:text-[0.6rem] uppercase tracking-[0.12em] sm:tracking-[0.2em] text-muted-foreground mt-0.5 sm:mt-1">
                   Access
                 </p>
               </div>
@@ -487,7 +485,7 @@ export function CinematicHero() {
               Transformation Complete
             </div>
             <h2 className="mt-3 sm:mt-4 font-display font-black text-[clamp(2.2rem,6.5vw,4.5rem)] leading-none uppercase tracking-wide">
-              POWER<span className="text-volt">UP</span> FITNESS
+              POWER<span className="text-volt-gradient">UP</span> FITNESS
             </h2>
             <p className="mt-2 sm:mt-3 text-xs sm:text-sm md:text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
               Pune&apos;s premier biomechanics and transformation clubs in Bhukum & Mahalunge.
@@ -560,31 +558,31 @@ export function CinematicHero() {
               </div>
 
               <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
-                <div className="metal p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl">
-                  <p className="font-display text-3xl sm:text-5xl text-volt leading-none">2,000+</p>
-                  <p className="mt-1.5 sm:mt-3 text-[0.5rem] sm:text-[0.65rem] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-muted-foreground">
+                <div className="metal p-3 sm:p-6 rounded-2xl sm:rounded-3xl text-center">
+                  <p className="font-display text-2xl xs:text-3xl sm:text-5xl text-volt leading-none">5,000+</p>
+                  <p className="mt-1 sm:mt-3 text-[0.45rem] xs:text-[0.55rem] sm:text-[0.65rem] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-muted-foreground">
                     Active Members
                   </p>
                 </div>
-                <div className="metal p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl">
-                  <p className="font-display text-3xl sm:text-5xl text-foreground leading-none">
+                <div className="metal p-3 sm:p-6 rounded-2xl sm:rounded-3xl text-center">
+                  <p className="font-display text-2xl xs:text-3xl sm:text-5xl text-foreground leading-none">
                     18/7
                   </p>
-                  <p className="mt-1.5 sm:mt-3 text-[0.5rem] sm:text-[0.65rem] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-muted-foreground">
+                  <p className="mt-1 sm:mt-3 text-[0.45rem] xs:text-[0.55rem] sm:text-[0.65rem] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-muted-foreground">
                     Club Hours
                   </p>
                 </div>
-                <div className="metal p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl">
-                  <p className="font-display text-3xl sm:text-5xl text-volt leading-none">2+</p>
-                  <p className="mt-1.5 sm:mt-3 text-[0.5rem] sm:text-[0.65rem] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-muted-foreground">
+                <div className="metal p-3 sm:p-6 rounded-2xl sm:rounded-3xl text-center">
+                  <p className="font-display text-2xl xs:text-3xl sm:text-5xl text-volt leading-none">3</p>
+                  <p className="mt-1 sm:mt-3 text-[0.45rem] xs:text-[0.55rem] sm:text-[0.65rem] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-muted-foreground">
                     Premium Branches
                   </p>
                 </div>
-                <div className="metal p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl">
-                  <p className="font-display text-3xl sm:text-5xl text-foreground leading-none">
+                <div className="metal p-3 sm:p-6 rounded-2xl sm:rounded-3xl text-center">
+                  <p className="font-display text-2xl xs:text-3xl sm:text-5xl text-foreground leading-none">
                     12+
                   </p>
-                  <p className="mt-1.5 sm:mt-3 text-[0.5rem] sm:text-[0.65rem] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-muted-foreground">
+                  <p className="mt-1 sm:mt-3 text-[0.45rem] xs:text-[0.55rem] sm:text-[0.65rem] uppercase tracking-[0.14em] sm:tracking-[0.2em] text-muted-foreground">
                     Elite Coaches
                   </p>
                 </div>

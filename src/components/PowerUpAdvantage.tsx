@@ -82,11 +82,6 @@ export function PowerUpAdvantage() {
                     </p>
                   </div>
 
-                  {/* Bottom Highlight Tag */}
-                  <div className="mt-8 pt-5 border-t border-border/30 flex items-center justify-between text-[0.68rem] font-bold uppercase tracking-[0.18em] text-volt">
-                    <span>{adv.highlight}</span>
-                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </div>
                 </div>
               </Reveal>
             );

@@ -322,24 +322,7 @@ export function CoreValues() {
             <ArrowLeft className="h-5 w-5" />
           </button>
 
-          {/* Center Progress Bar & Step Numbers */}
-          <div className="flex flex-col items-center gap-2">
-            {/* Step Numbers */}
-            <div className="flex items-center gap-5 sm:gap-7">
-              {VALUES.map((v, i) => (
-                <button
-                  key={v.id}
-                  onClick={() => setActiveIdx(i)}
-                  className={`font-display text-sm sm:text-base font-bold transition-all duration-300 cursor-pointer ${
-                    i === activeIdx
-                      ? "text-volt scale-110"
-                      : "text-neutral-500 hover:text-neutral-300"
-                  }`}
-                >
-                  {v.num}
-                </button>
-              ))}
-            </div>
+          <div className="flex flex-col items-center gap-2 py-2">
 
             {/* Glowing Step Line with Node Points */}
             <div className="relative w-48 sm:w-64 h-1 bg-neutral-800 rounded-full overflow-hidden flex items-center">

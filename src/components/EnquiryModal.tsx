@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { BRANCHES, ENQUIRY_GOALS, getBranchDirectWhatsAppUrl, type BranchId } from "./site";
+import { BRANCHES, ENQUIRY_GOALS, type BranchId } from "./site";
 import { recordEnquiryFn } from "../lib/enquiry";
-import { X, Sparkles, Send, CheckCircle2, AlertCircle, MessageCircle } from "lucide-react";
+import { X, Sparkles, Mail, CheckCircle2, AlertCircle, ChevronDown } from "lucide-react";
 
 interface EnquiryModalProps {
   isOpen: boolean;
@@ -14,14 +14,35 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [branchId, setBranchId] = useState<string>(BRANCHES[0]?.id || "bhukum");
-  const [enquiry, setEnquiry] = useState<string>(ENQUIRY_GOALS[0] || "Membership & Plans");
+  const [enquiry, setEnquiry] = useState<string>("");
   const [message, setMessage] = useState("");
 
-  const [fieldErrors, setFieldErrors] = useState<{ name?: string; phone?: string }>({});
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; phone?: string; enquiry?: string }>({});
   const [serverError, setServerError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
+  const [enquiryDropdownOpen, setEnquiryDropdownOpen] = useState(false);
+
+  const branchDropdownRef = useRef<HTMLDivElement>(null);
+  const enquiryDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Click outside listener for custom dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (branchDropdownRef.current && !branchDropdownRef.current.contains(event.target as Node)) {
+        setBranchDropdownOpen(false);
+      }
+      if (enquiryDropdownRef.current && !enquiryDropdownRef.current.contains(event.target as Node)) {
+        setEnquiryDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Validate Indian Phone Number format
   const validatePhone = (value: string) => {
@@ -83,13 +104,13 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
     };
   }, [isOpen, onClose]);
 
-  // Form submission handler with Excel recording and WhatsApp redirection
+  // Form submission handler: Records in Excel & routes to samarthsalgar02@gmail.com
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (submitting || submitted) return;
 
-    const newErrors: { name?: string; phone?: string } = {};
+    const newErrors: { name?: string; phone?: string; enquiry?: string } = {};
 
     if (!name.trim() || name.trim().length < 2) {
       newErrors.name = "Please enter your full name";
@@ -97,6 +118,10 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
 
     if (!phone.trim() || !validatePhone(phone)) {
       newErrors.phone = "Please enter a valid 10-digit mobile number";
+    }
+
+    if (!enquiry) {
+      newErrors.enquiry = "Please select one option";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -116,31 +141,65 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
           phone,
           branchId,
           enquiry,
-          message,
+          message: email ? `Email: ${email.trim()} | ${message}` : message,
           source: "Homepage Popup",
         },
       });
 
-      if (!res?.success || !res?.whatsappUrl) {
-        throw new Error("Could not record enquiry in spreadsheet.");
-      }
-
       setSubmitted(true);
       setSubmitting(false);
 
-      // 2. Open WhatsApp with prefilled enquiry details
-      window.open(res.whatsappUrl, "_blank", "noopener,noreferrer");
+      // 2. Build email mailto link to samarthsalgar02@gmail.com
+      const branch = BRANCHES.find((b) => b.id === branchId) || BRANCHES[0]!;
+      const subject = encodeURIComponent(
+        `New PowerUp Fitness Enquiry: ${name.trim()} (${branch.name})`,
+      );
+      const emailLines = [
+        "Hello PowerUp Team,",
+        "",
+        "A new fitness enquiry has been submitted through the PowerUp website popup:",
+        "",
+        `• Name: ${name.trim()}`,
+        `• Phone: +91 ${phone.trim()}`,
+      ];
+
+      if (email.trim()) {
+        emailLines.push(`• Email: ${email.trim()}`);
+      }
+
+      emailLines.push(
+        `• Preferred Branch: Power Up ${branch.name}${branch.status === "upcoming" ? " (Coming Soon)" : ""}`,
+      );
+      emailLines.push(`• Interested In: ${enquiry.trim()}`);
+
+      if (message.trim()) {
+        emailLines.push(`• Message: ${message.trim()}`);
+      }
+
+      if (res?.submissionId) {
+        emailLines.push(`• Reference ID: ${res.submissionId}`);
+      }
+
+      emailLines.push("");
+      emailLines.push("PowerUp Fitness Concierge System");
+
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=samarthsalgar02@gmail.com&su=${subject}&body=${encodeURIComponent(
+        emailLines.join("\n"),
+      )}`;
+
+      // Open Gmail in a new tab
+      window.open(gmailUrl, "_blank", "noopener,noreferrer");
 
       // 3. Gracefully close modal
       setTimeout(() => {
         onClose();
         setSubmitted(false);
-      }, 1800);
+      }, 2500);
     } catch (err: any) {
       console.error("Enquiry submission error:", err);
       setSubmitting(false);
       setServerError(
-        "We couldn't submit your enquiry right now. Please try again or connect directly on WhatsApp.",
+        "We couldn't record your enquiry right now. Please email directly to samarthsalgar02@gmail.com.",
       );
     }
   };
@@ -169,13 +228,11 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
       >
         {/* Top Decorative Ambient Highlights */}
         <div className="pointer-events-none absolute -top-24 -left-24 h-48 w-48 rounded-full bg-volt/15 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-volt/10 blur-3xl" />
-
-        {/* ───────────── HEADER ───────────── */}
+            {/* ───────────── HEADER ───────────── */}
         <div className="relative flex items-start justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-[0.58rem] sm:text-[0.62rem] font-semibold uppercase tracking-[0.26em] text-volt">
-              <Sparkles className="h-3 w-3 text-volt" />
+            <div className="inline-flex items-center gap-2 rounded-full glass px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-volt">
+              <Sparkles className="h-3.5 w-3.5 text-volt" />
               PowerUp Enquiry
             </div>
             <h2
@@ -185,7 +242,7 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
               START YOUR <br />
               <span className="text-volt-gradient">TRANSFORMATION</span>
             </h2>
-            <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+            <p className="mt-2 text-sm sm:text-base text-muted-foreground leading-relaxed">
               Tell us what you&apos;re looking for and our team will help you choose the right
               PowerUp experience.
             </p>
@@ -204,28 +261,26 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
 
         {/* Server error alert */}
         {serverError && (
-          <div className="relative mt-4 rounded-xl border border-red-500/40 bg-red-950/40 p-3 text-xs text-red-300 flex items-start gap-2">
+          <div className="relative mt-4 rounded-xl border border-red-500/40 bg-red-950/40 p-3 text-xs sm:text-sm text-red-300 flex items-start gap-2">
             <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-red-400" />
             <div className="flex-1">
               <p>{serverError}</p>
               <a
-                href={getBranchDirectWhatsAppUrl(branchId)}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-2 inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-volt hover:underline text-[0.68rem]"
+                href="mailto:samarthsalgar02@gmail.com"
+                className="mt-2 inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-volt hover:underline text-xs"
               >
-                <MessageCircle className="h-3.5 w-3.5" />
-                Chat with Branch directly on WhatsApp →
+                <Mail className="h-3.5 w-3.5" />
+                Email directly to samarthsalgar02@gmail.com →
               </a>
             </div>
           </div>
         )}
 
         {/* ───────────── FORM ───────────── */}
-        <form onSubmit={handleSubmit} className="relative mt-4 space-y-3 sm:space-y-3.5">
+        <form onSubmit={handleSubmit} className="relative mt-4 space-y-3 sm:space-y-4">
           {/* Full Name */}
           <div>
-            <label className="block text-[0.62rem] sm:text-[0.68rem] font-bold uppercase tracking-[0.2em] text-foreground/80 mb-1">
+            <label className="block text-xs sm:text-sm font-bold uppercase tracking-[0.16em] text-foreground/90 mb-1.5">
               Your Name <span className="text-volt">*</span>
             </label>
             <input
@@ -238,90 +293,161 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
                 setName(e.target.value);
                 if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: undefined }));
               }}
-              className={`w-full rounded-2xl border bg-carbon/80 px-4 py-2.5 sm:py-3 text-xs sm:text-sm outline-none transition-all placeholder:text-muted-foreground/50 focus:border-volt/70 focus:ring-2 focus:ring-volt/20 ${
+              className={`w-full rounded-2xl border bg-carbon/80 px-4 py-2.5 sm:py-3 text-sm sm:text-base outline-none transition-all placeholder:text-muted-foreground/50 focus:border-volt/70 focus:ring-2 focus:ring-volt/20 ${
                 fieldErrors.name ? "border-red-500/80" : "border-border/40"
               }`}
             />
             {fieldErrors.name && (
-              <p className="mt-1 text-[0.65rem] text-red-400 font-medium">{fieldErrors.name}</p>
+              <p className="mt-1 text-xs text-red-400 font-medium">{fieldErrors.name}</p>
             )}
           </div>
 
-          {/* Phone Number */}
-          <div>
-            <label className="block text-[0.62rem] sm:text-[0.68rem] font-bold uppercase tracking-[0.2em] text-foreground/80 mb-1">
-              Phone Number <span className="text-volt">*</span>
-            </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground">
-                +91
-              </span>
+          {/* Phone & Email Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            {/* Phone Number */}
+            <div>
+              <label className="block text-xs sm:text-sm font-bold uppercase tracking-[0.16em] text-foreground/90 mb-1.5">
+                Phone Number <span className="text-volt">*</span>
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground">
+                  +91
+                </span>
+                <input
+                  type="tel"
+                  required
+                  maxLength={14}
+                  placeholder="98765 43210"
+                  value={phone}
+                  disabled={submitting || submitted}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    if (fieldErrors.phone) setFieldErrors((prev) => ({ ...prev, phone: undefined }));
+                  }}
+                  className={`w-full rounded-2xl border bg-carbon/80 pl-13 pr-4 py-2.5 sm:py-3 text-sm sm:text-base outline-none transition-all placeholder:text-muted-foreground/50 focus:border-volt/70 focus:ring-2 focus:ring-volt/20 ${
+                    fieldErrors.phone ? "border-red-500/80" : "border-border/40"
+                  }`}
+                />
+              </div>
+              {fieldErrors.phone && (
+                <p className="mt-1 text-xs text-red-400 font-medium">{fieldErrors.phone}</p>
+              )}
+            </div>
+
+            {/* Email Address */}
+            <div>
+              <label className="block text-xs sm:text-sm font-bold uppercase tracking-[0.16em] text-foreground/90 mb-1.5">
+                Email Address (Optional)
+              </label>
               <input
-                type="tel"
-                required
-                maxLength={14}
-                placeholder="98765 43210"
-                value={phone}
+                type="email"
+                placeholder="your@email.com"
+                value={email}
                 disabled={submitting || submitted}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                  if (fieldErrors.phone) setFieldErrors((prev) => ({ ...prev, phone: undefined }));
-                }}
-                className={`w-full rounded-2xl border bg-carbon/80 pl-12 pr-4 py-2.5 sm:py-3 text-xs sm:text-sm outline-none transition-all placeholder:text-muted-foreground/50 focus:border-volt/70 focus:ring-2 focus:ring-volt/20 ${
-                  fieldErrors.phone ? "border-red-500/80" : "border-border/40"
-                }`}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-2xl border border-border/40 bg-carbon/80 px-4 py-2.5 sm:py-3 text-sm sm:text-base outline-none transition-all placeholder:text-muted-foreground/50 focus:border-volt/70 focus:ring-2 focus:ring-volt/20"
               />
             </div>
-            {fieldErrors.phone && (
-              <p className="mt-1 text-[0.65rem] text-red-400 font-medium">{fieldErrors.phone}</p>
-            )}
           </div>
 
           {/* Branch & Interest Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Preferred Branch */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            {/* Preferred Branch (Custom Dropdown) */}
             <div>
-              <label className="block text-[0.62rem] sm:text-[0.68rem] font-bold uppercase tracking-[0.2em] text-foreground/80 mb-1">
+              <label className="block text-xs sm:text-sm font-bold uppercase tracking-[0.16em] text-foreground/90 mb-1.5">
                 Branch <span className="text-volt">*</span>
               </label>
-              <select
-                value={branchId}
-                disabled={submitting || submitted}
-                onChange={(e) => setBranchId(e.target.value)}
-                className="w-full rounded-2xl border border-border/40 bg-carbon px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm outline-none transition-all focus:border-volt/70 focus:ring-2 focus:ring-volt/20 text-foreground cursor-pointer"
-              >
-                {BRANCHES.map((b) => (
-                  <option key={b.id} value={b.id} className="bg-carbon text-foreground">
-                    Power Up {b.name}
-                    {b.status === "upcoming" ? " — Coming Soon" : ""}
-                  </option>
-                ))}
-              </select>
+              <div ref={branchDropdownRef} className="relative">
+                <button
+                  type="button"
+                  disabled={submitting || submitted}
+                  onClick={() => setBranchDropdownOpen(!branchDropdownOpen)}
+                  className="w-full flex items-center justify-between rounded-2xl border border-border/40 bg-carbon/90 px-4 py-2.5 sm:py-3 text-sm sm:text-base text-foreground cursor-pointer transition-all focus:border-volt/70 focus:ring-2 focus:ring-volt/20 text-left"
+                >
+                  <span className="truncate">
+                    Power Up {BRANCHES.find((b) => b.id === branchId)?.name}
+                    {BRANCHES.find((b) => b.id === branchId)?.status === "upcoming" ? " — Coming Soon" : ""}
+                  </span>
+                  <ChevronDown className={`h-4 w-4 text-volt transition-transform duration-300 ${branchDropdownOpen ? "rotate-180" : ""}`} />
+                </button>
+                
+                {branchDropdownOpen && (
+                  <div className="absolute z-100 w-full mt-1.5 rounded-2xl bg-[#0c0c0c] border border-volt/35 p-1.5 shadow-[0_15px_40px_rgba(0,0,0,0.95)] max-h-60 overflow-y-auto animate-fade-in">
+                    {BRANCHES.map((b) => (
+                      <button
+                        key={b.id}
+                        type="button"
+                        onClick={() => {
+                          setBranchId(b.id);
+                          setBranchDropdownOpen(false);
+                        }}
+                        className={`w-full text-left rounded-xl px-4 py-2.5 sm:py-3 text-sm sm:text-base transition-colors duration-200 cursor-pointer ${
+                          branchId === b.id
+                            ? "bg-volt text-carbon font-bold"
+                            : "text-foreground hover:bg-carbon hover:text-volt"
+                        }`}
+                      >
+                        Power Up {b.name}
+                        {b.status === "upcoming" ? " (Coming Soon)" : ""}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Interest */}
+            {/* Interest (Custom Dropdown) */}
             <div>
-              <label className="block text-[0.62rem] sm:text-[0.68rem] font-bold uppercase tracking-[0.2em] text-foreground/80 mb-1">
+              <label className="block text-xs sm:text-sm font-bold uppercase tracking-[0.16em] text-foreground/90 mb-1.5">
                 Interest <span className="text-volt">*</span>
               </label>
-              <select
-                value={enquiry}
-                disabled={submitting || submitted}
-                onChange={(e) => setEnquiry(e.target.value)}
-                className="w-full rounded-2xl border border-border/40 bg-carbon px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm outline-none transition-all focus:border-volt/70 focus:ring-2 focus:ring-volt/20 text-foreground cursor-pointer"
-              >
-                {ENQUIRY_GOALS.map((goal) => (
-                  <option key={goal} value={goal} className="bg-carbon text-foreground">
-                    {goal}
-                  </option>
-                ))}
-              </select>
+              <div ref={enquiryDropdownRef} className="relative">
+                <button
+                  type="button"
+                  disabled={submitting || submitted}
+                  onClick={() => setEnquiryDropdownOpen(!enquiryDropdownOpen)}
+                  className={`w-full flex items-center justify-between rounded-2xl border bg-carbon/90 px-4 py-2.5 sm:py-3 text-sm sm:text-base text-foreground cursor-pointer transition-all focus:border-volt/70 focus:ring-2 focus:ring-volt/20 text-left ${
+                    fieldErrors.enquiry ? "border-red-500/80" : "border-border/40"
+                  }`}
+                >
+                  <span className={`truncate ${!enquiry ? "text-muted-foreground/60 font-medium" : ""}`}>
+                    {enquiry || "Select one option"}
+                  </span>
+                  <ChevronDown className={`h-4 w-4 text-volt transition-transform duration-300 ${enquiryDropdownOpen ? "rotate-180" : ""}`} />
+                </button>
+                
+                {enquiryDropdownOpen && (
+                  <div className="absolute z-100 w-full mt-1.5 rounded-2xl bg-[#0c0c0c] border border-volt/35 p-1.5 shadow-[0_15px_40px_rgba(0,0,0,0.95)] animate-fade-in">
+                    {ENQUIRY_GOALS.map((goal) => (
+                      <button
+                        key={goal}
+                        type="button"
+                        onClick={() => {
+                          setEnquiry(goal);
+                          setEnquiryDropdownOpen(false);
+                          if (fieldErrors.enquiry) setFieldErrors((prev) => ({ ...prev, enquiry: undefined }));
+                        }}
+                        className={`w-full text-left rounded-xl px-4 py-2.5 sm:py-3 text-sm sm:text-base transition-colors duration-200 cursor-pointer ${
+                          enquiry === goal
+                            ? "bg-volt text-carbon font-bold"
+                            : "text-foreground hover:bg-carbon hover:text-volt"
+                        }`}
+                      >
+                        {goal}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {fieldErrors.enquiry && (
+                <p className="mt-1 text-xs text-red-400 font-medium">{fieldErrors.enquiry}</p>
+              )}
             </div>
           </div>
 
           {/* Optional Message / Goal Note */}
           <div>
-            <label className="block text-[0.62rem] sm:text-[0.68rem] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-1">
+            <label className="block text-xs sm:text-sm font-bold uppercase tracking-[0.16em] text-muted-foreground mb-1.5">
               Goal or Question (Optional)
             </label>
             <input
@@ -330,7 +456,7 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
               value={message}
               disabled={submitting || submitted}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full rounded-2xl border border-border/40 bg-carbon/80 px-4 py-2 sm:py-2.5 text-xs outline-none transition-all placeholder:text-muted-foreground/40 focus:border-volt/70 focus:ring-2 focus:ring-volt/20"
+              className="w-full rounded-2xl border border-border/40 bg-carbon/80 px-4 py-2.5 sm:py-3 text-sm sm:text-base outline-none transition-all placeholder:text-muted-foreground/40 focus:border-volt/70 focus:ring-2 focus:ring-volt/20"
             />
           </div>
 
@@ -339,29 +465,22 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
             <button
               type="submit"
               disabled={submitting || submitted}
-              className="group relative w-full overflow-hidden rounded-full bg-volt py-3 sm:py-3.5 px-6 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-carbon transition-all duration-300 hover:shadow-[0_10px_30px_rgba(255,222,71,0.4)] hover:scale-[1.01] active:scale-[0.99] disabled:opacity-75 cursor-pointer"
+              className="group relative w-full overflow-hidden rounded-full bg-volt py-3.5 sm:py-4 px-6 text-sm sm:text-base font-bold uppercase tracking-[0.2em] text-carbon transition-all duration-300 hover:shadow-[0_10px_30px_rgba(255,222,71,0.4)] hover:scale-[1.01] active:scale-[0.99] disabled:opacity-75 cursor-pointer"
             >
               <span className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
               <span className="relative flex items-center justify-center gap-2">
                 {submitted ? (
                   <>
                     <CheckCircle2 className="h-4 w-4 text-carbon" />
-                    <span>Enquiry Saved! Opening WhatsApp...</span>
+                    <span>Submitted!</span>
                   </>
                 ) : submitting ? (
-                  <span>Saving & Opening WhatsApp...</span>
+                  <span>Submitting...</span>
                 ) : (
-                  <>
-                    <span>Continue to WhatsApp</span>
-                    <Send className="h-3.5 w-3.5 text-carbon" />
-                  </>
+                  <span>Submit</span>
                 )}
               </span>
             </button>
-
-            <p className="mt-2 text-center text-[0.6rem] sm:text-[0.65rem] text-muted-foreground/75">
-              Records your enquiry in our verified schedule and pre-fills your WhatsApp chat.
-            </p>
           </div>
         </form>
       </div>
