@@ -1,3 +1,3 @@
-import { createServerEntry } from "@tanstack/react-start/server";
+import defaultHandler from "@tanstack/react-start/server-entry";
 
-export default createServerEntry();
+export default defaultHandler;
