@@ -37,7 +37,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
+  console.error("Root error boundary caught:", error);
   const router = useRouter();
 
   return (
@@ -47,8 +47,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           This page didn't load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          {error?.message || "Something went wrong on our end. You can try refreshing or head back home."}
         </p>
+        {error?.stack && (
+          <pre className="mt-4 p-3 bg-black/60 rounded-xl text-[0.65rem] text-red-400 font-mono text-left max-h-40 overflow-auto border border-red-500/20">
+            {error.stack}
+          </pre>
+        )}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {

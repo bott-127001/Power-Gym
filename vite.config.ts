@@ -12,11 +12,7 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     tailwindcss(),
-    tanstackStart({
-      server: { entry: "server" },
-    }),
-    nitro({
-      preset: "cloudflare-module",
-    }),
+    tanstackStart(),
+    nitro(),
   ],
 });
