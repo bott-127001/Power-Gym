@@ -19,11 +19,14 @@ export default {
       const handler = await getServerEntry();
       return await handler.fetch(request, env, ctx);
     } catch (error) {
-      console.error(error);
-      return new Response("Internal Server Error", {
-        status: 500,
-        headers: { "content-type": "text/plain; charset=utf-8" },
-      });
+      console.error("SSR Handler Error:", error);
+      return new Response(
+        `Internal Server Error\n\n${error instanceof Error ? error.stack || error.message : String(error)}`,
+        {
+          status: 500,
+          headers: { "content-type": "text/plain; charset=utf-8" },
+        },
+      );
     }
   },
 };
