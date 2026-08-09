@@ -1,0 +1,1 @@
+var e=`/assets/facility-DmD87Zf2.jpg`;export{e as t};

@@ -13,6 +13,8 @@ export default defineConfig({
     tsconfigPaths(),
     tailwindcss(),
     tanstackStart(),
-    nitro(),
+    nitro({
+      preset: process.env.NITRO_PRESET || (process.env.VERCEL ? "vercel" : "vercel"),
+    }),
   ],
 });
