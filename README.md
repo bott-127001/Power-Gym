@@ -1142,19 +1142,9 @@ Avoid repetitive layouts, repetitive cards, repetitive shapes, and repetitive ba
 
 Create a cohesive design system that combines premium typography, varied geometric layouts, multiple surface materials, dynamic card systems, luxurious lighting, immersive backgrounds, and exceptional attention to detail.
 
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/8da16df3-ac36-4193-840c-15f32edfa562).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Prefer working locally? You need Node.js and npm:
 
 ```sh
 git clone <this-repository-url>
