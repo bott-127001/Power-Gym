@@ -67,72 +67,66 @@ export async function appendToExcelWorkbook(row: {
   "WhatsApp URL": string;
   "ISO Timestamp": string;
 }) {
-  try {
-    const dataDir = process.env.VERCEL
-      ? path.join("/tmp", "data")
-      : path.resolve(process.cwd(), "data");
-    const excelFilePath = path.join(dataDir, "PowerUp_Enquiries.xlsx");
-    const jsonFilePath = path.join(dataDir, "enquiries.json");
+  const dataDir = path.resolve(process.cwd(), "data");
+  const excelFilePath = path.join(dataDir, "PowerUp_Enquiries.xlsx");
+  const jsonFilePath = path.join(dataDir, "enquiries.json");
 
-    // Ensure data directory exists
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
-    }
+  // Ensure data directory exists
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
 
-    let workbook: XLSX.WorkBook;
-    let rows: Record<string, any>[] = [];
+  let workbook: XLSX.WorkBook;
+  let rows: Record<string, any>[] = [];
 
-    // Read existing workbook or create fresh one
-    if (fs.existsSync(excelFilePath)) {
-      try {
-        workbook = XLSX.readFile(excelFilePath);
-        const firstSheet = workbook.Sheets[workbook.SheetNames[0]!];
-        if (firstSheet) {
-          rows = XLSX.utils.sheet_to_json(firstSheet);
-        }
-      } catch {
-        workbook = XLSX.utils.book_new();
+  // Read existing workbook or create fresh one
+  if (fs.existsSync(excelFilePath)) {
+    try {
+      workbook = XLSX.readFile(excelFilePath);
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]!];
+      if (firstSheet) {
+        rows = XLSX.utils.sheet_to_json(firstSheet);
       }
-    } else {
+    } catch {
       workbook = XLSX.utils.book_new();
     }
-
-    // Append new row
-    rows.push(row);
-
-    // Generate updated worksheet with auto-width columns
-    const worksheet = XLSX.utils.json_to_sheet(rows);
-
-    // Set column widths for clean readability
-    worksheet["!cols"] = [
-      { wch: 18 }, // Submission ID
-      { wch: 12 }, // Date
-      { wch: 12 }, // Time
-      { wch: 22 }, // Name
-      { wch: 16 }, // Phone
-      { wch: 15 }, // Branch
-      { wch: 28 }, // Enquiry Type
-      { wch: 35 }, // Message
-      { wch: 18 }, // Source
-      { wch: 10 }, // Status
-      { wch: 40 }, // WhatsApp URL
-      { wch: 26 }, // ISO Timestamp
-    ];
-
-    // Write sheet back into workbook
-    if (workbook.SheetNames.includes("Enquiries")) {
-      workbook.Sheets["Enquiries"] = worksheet;
-    } else {
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Enquiries");
-    }
-
-    XLSX.writeFile(workbook, excelFilePath);
-
-    // Write JSON backup log
-    fs.writeFileSync(jsonFilePath, JSON.stringify(rows, null, 2), "utf-8");
-  } catch (fsErr) {
-    console.warn("Local storage write warning (serverless environment):", fsErr);
+  } else {
+    workbook = XLSX.utils.book_new();
   }
+
+  // Append new row
+  rows.push(row);
+
+  // Generate updated worksheet with auto-width columns
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+
+  // Set column widths for clean readability
+  worksheet["!cols"] = [
+    { wch: 18 }, // Submission ID
+    { wch: 12 }, // Date
+    { wch: 12 }, // Time
+    { wch: 22 }, // Name
+    { wch: 16 }, // Phone
+    { wch: 15 }, // Branch
+    { wch: 28 }, // Enquiry Type
+    { wch: 35 }, // Message
+    { wch: 18 }, // Source
+    { wch: 10 }, // Status
+    { wch: 40 }, // WhatsApp URL
+    { wch: 26 }, // ISO Timestamp
+  ];
+
+  // Write sheet back into workbook
+  if (workbook.SheetNames.includes("Enquiries")) {
+    workbook.Sheets["Enquiries"] = worksheet;
+  } else {
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Enquiries");
+  }
+
+  XLSX.writeFile(workbook, excelFilePath);
+
+  // Write JSON backup log
+  fs.writeFileSync(jsonFilePath, JSON.stringify(rows, null, 2), "utf-8");
 
   // Optional: If a cloud webhook or MS Graph endpoint is configured in ENV, forward the payload
   const cloudWebhookUrl = process.env.EXCEL_WEBHOOK_URL || process.env.POWER_AUTOMATE_EXCEL_URL;

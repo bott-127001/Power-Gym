@@ -12,9 +12,11 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     tailwindcss(),
-    tanstackStart(),
+    tanstackStart({
+      server: { entry: "server" },
+    }),
     nitro({
-      preset: process.env.NITRO_PRESET || (process.env.VERCEL ? "vercel" : "vercel"),
+      preset: "cloudflare-module",
     }),
   ],
 });

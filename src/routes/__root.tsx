@@ -37,7 +37,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error("Root error boundary caught:", error);
+  console.error(error);
   const router = useRouter();
 
   return (
@@ -47,13 +47,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           This page didn't load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {error?.message || "Something went wrong on our end. You can try refreshing or head back home."}
+          Something went wrong on our end. You can try refreshing or head back home.
         </p>
-        {error?.stack && (
-          <pre className="mt-4 p-3 bg-black/60 rounded-xl text-[0.65rem] text-red-400 font-mono text-left max-h-40 overflow-auto border border-red-500/20">
-            {error.stack}
-          </pre>
-        )}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -108,8 +103,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap",
       },
-      { rel: "icon", href: "/logo.png", type: "image/png" },
-      { rel: "apple-touch-icon", href: "/logo.png" },
+      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
