@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PowerUp — Particle Morph</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --void: #06070a;
+        --void2: #0b0d12;
+        --copper: #f2d93b;
+        --chrome: #c9d5de;
+        --violet: #6e5bff;
+        --ink: #f3f1ec;
+        --ink-dim: #7d828c;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        background: var(--void);
+        color: var(--ink);
+        overflow-x: hidden;
+        font-family: "JetBrains Mono", monospace;
+      }
+      #stage-wrap {
+        position: relative;
+        height: 760vh;
+      }
+      #pin {
+        position: relative;
+        height: 100vh;
+        width: 100%;
+        overflow: hidden;
+        background: radial-gradient(120% 90% at 50% 20%, #10131a 0%, var(--void) 55%, #030304 100%);
+      }
+      canvas#gl {
+        position: absolute;
+        inset: 0;
+        display: block;
+      }
+      .vignette {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          120% 100% at 50% 50%,
+          transparent 40%,
+          rgba(0, 0, 0, 0.65) 100%
+        );
+      }
+      .grain {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 5;
+        opacity: 0.045;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 20;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 26px 5vw;
+        font-weight: 500;
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+      }
+      nav b {
+        color: var(--ink);
+        font-family: "Big Shoulders Display", sans-serif;
+        font-size: 16px;
+        letter-spacing: 0.02em;
+      }
+      nav b span {
+        color: var(--copper);
+      }
+
+      .rail {
+        position: fixed;
+        right: 5vw;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        z-index: 20;
+      }
+      .rail i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: transparent;
+        border: 1px solid var(--ink-dim);
+        display: block;
+        transition: 0.35s;
+      }
+      .rail i.on {
+        background: var(--copper);
+        border-color: var(--copper);
+        box-shadow: 0 0 12px var(--copper);
+        transform: scale(1.5);
+      }
+      #flash {
+        position: fixed;
+        inset: 0;
+        z-index: 15;
+        pointer-events: none;
+        background: radial-gradient(circle, #ff5a36 0%, #f2d93b 55%, transparent 100%);
+        opacity: 0;
+      }
+
+      .sub {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 16%;
+        text-align: center;
+        z-index: 10;
+        font-size: 12px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .sub b {
+        color: var(--copper);
+        font-weight: 500;
+      }
+
+      .eyebrow {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 16%;
+        z-index: 10;
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        opacity: 0;
+      }
+
+      .hint {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: var(--ink-dim);
+        text-transform: uppercase;
+      }
+      .hint .line {
+        width: 1px;
+        height: 36px;
+        background: linear-gradient(var(--copper), transparent);
+        animation: pulse 1.8s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.15;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      section.after {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        text-align: center;
+        padding: 12vh 6vw;
+        position: relative;
+        background: var(--void);
+        z-index: 3;
+      }
+      section.after h2 {
+        font-family: "Big Shoulders Display", sans-serif;
+        font-weight: 900;
+        font-size: clamp(30px, 4.2vw, 52px);
+      }
+      section.after h2 span {
+        color: var(--copper);
+      }
+      section.after p {
+        color: var(--ink-dim);
+        max-width: 560px;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .btn {
+        margin-top: 10px;
+        padding: 15px 36px;
+        border-radius: 2px;
+        background: var(--copper);
+        color: #0b0603;
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hint {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain"></div>
+    <nav>
+      <b>POWER<span>UP</span></b>
+      <div>Particle Morph — Real 3D</div>
+    </nav>
+    <div class="rail"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+    <div id="flash"></div>
+
+    <div id="stage-wrap">
+      <div id="pin">
+        <canvas id="gl"></canvas>
+        <div class="vignette"></div>
+        <div class="eyebrow" id="eyebrow">01 — Foundation</div>
+        <div class="sub" id="sub">
+          Your ultimate fitness destination. <b>Next‑level biomechanics.</b>
+        </div>
+        <div class="hint">
+          <div>Scroll</div>
+          <div class="line"></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="after">
+      <h2>Word → object → <span>burst</span> → word.</h2>
+      <p>
+        Every word disintegrates into a real volumetric object — an actual dumbbell, an actual
+        plate, built from live points, not a flat silhouette. It holds, then detonates: camera
+        shake, a heat-flash, a static-like strobe as it tears apart, before reassembling into the
+        next word. Two burst intensities: a controlled break between word and object, a violent one
+        between object and word.
+      </p>
+      <button class="btn">Hand this to Lovable</button>
+    </section>
+
+    <!-- Classic global-script build (no ES modules / import maps) so this runs from a
+     double-clicked file:// HTML file, not just a hosted server. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
+
+    <div
+      id="fatal"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 999;
+        background: #06070a;
+        color: #e2643b;
+        font-family: &quot;JetBrains Mono&quot;, monospace;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 8vw;
+        font-size: 14px;
+        line-height: 1.7;
+      "
+    ></div>
+
+    <script>
+      try {
+        gsap.registerPlugin(ScrollTrigger);
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const isSmall = window.innerWidth < 760;
+        const N = isSmall ? 1800 : 3600;
+
+        const STAGES = [
+          { type: "word", label: "POWER" },
+          { type: "object", label: "LOAD — Dumbbell" },
+          { type: "word", label: "UP" },
+          { type: "object", label: "LOAD — Plate" },
+          { type: "word", label: "FITNESS" },
+        ];
+        const LABELS = [
+          "01 — Foundation",
+          "— forging —",
+          "02 — Momentum",
+          "— loading —",
+          "03 — Result",
+        ];
+        const SUBS = [
+          "Your ultimate fitness destination. <b>Next‑level biomechanics.</b>",
+          "",
+          "Every rep compounds. <b>Elite coaching, tracked.</b>",
+          "",
+          "This is the version of you that shows up. <b>Every day.</b>",
+        ];
+
+        // ---------- sample a word into N points from a rendered canvas ----------
+        function sampleWord(word, count) {
+          const cw = 1400,
+            ch = 460;
+          const c = document.createElement("canvas");
+          c.width = cw;
+          c.height = ch;
+          const ctx = c.getContext("2d");
+          ctx.fillStyle = "#000";
+          ctx.fillRect(0, 0, cw, ch);
+          ctx.fillStyle = "#fff";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          let size = 320;
+          ctx.font = `900 ${size}px "Big Shoulders Display", sans-serif`;
+          while (ctx.measureText(word).width > cw * 0.88 && size > 40) {
+            size -= 4;
+            ctx.font = `900 ${size}px "Big Shoulders Display", sans-serif`;
+          }
+          ctx.fillText(word, cw / 2, ch / 2 + size * 0.03);
+          const data = ctx.getImageData(0, 0, cw, ch).data;
+          const pts = [];
+          const stride = 3;
+          for (let y = 0; y < ch; y += stride) {
+            for (let x = 0; x < cw; x += stride) {
+              const a = data[(y * cw + x) * 4];
+              if (a > 120) pts.push([((x - cw / 2) / cw) * 300, (-(y - ch / 2) / ch) * 130]);
+            }
+          }
+          const out = new Float32Array(count * 3);
+          for (let i = 0; i < count; i++) {
+            const p = pts[Math.floor(Math.random() * pts.length)] || [0, 0];
+            out[i * 3 + 0] = p[0] + (Math.random() - 0.5) * 1.5;
+            out[i * 3 + 1] = p[1] + (Math.random() - 0.5) * 1.5;
+            out[i * 3 + 2] = (Math.random() - 0.5) * 46;
+          }
+          return out;
+        }
+
+        // ---------- real 3D object samplers: points live on an actual volumetric surface ----------
+        function sampleSphereSurface(cx, cy, cz, r, count, out, offset) {
+          for (let i = 0; i < count; i++) {
+            const theta = Math.random() * Math.PI * 2,
+              phi = Math.acos(2 * Math.random() - 1);
+            const idx = (offset + i) * 3;
+            out[idx] = cx + r * Math.sin(phi) * Math.cos(theta);
+            out[idx + 1] = cy + r * Math.sin(phi) * Math.sin(theta);
+            out[idx + 2] = cz + r * Math.cos(phi);
+          }
+        }
+        function sampleCylinderSurface(x0, x1, r, count, out, offset) {
+          for (let i = 0; i < count; i++) {
+            const t = Math.random(),
+              a = Math.random() * Math.PI * 2;
+            const idx = (offset + i) * 3;
+            out[idx] = THREE.MathUtils.lerp(x0, x1, t);
+            out[idx + 1] = r * Math.cos(a);
+            out[idx + 2] = r * Math.sin(a);
+          }
+        }
+        function sampleDumbbell(count) {
+          const out = new Float32Array(count * 3);
+          const ballN = Math.floor(count * 0.38);
+          sampleSphereSurface(-78, 0, 0, 36, ballN, out, 0);
+          sampleSphereSurface(78, 0, 0, 36, ballN, out, ballN);
+          sampleCylinderSurface(-78, 78, 11, count - ballN * 2, out, ballN * 2);
+          return out;
+        }
+        function samplePlate(count) {
+          const out = new Float32Array(count * 3);
+          for (let i = 0; i < count; i++) {
+            const a = Math.random() * Math.PI * 2;
+            const r = 42 + Math.random() * 66; // annulus band, like a weight plate
+            const y = (Math.random() - 0.5) * 30;
+            out[i * 3] = r * Math.cos(a);
+            out[i * 3 + 1] = y;
+            out[i * 3 + 2] = r * Math.sin(a);
+          }
+          return out;
+        }
+
+        function scatterCloud(count, radius) {
+          const out = new Float32Array(count * 3);
+          for (let i = 0; i < count; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            const r = radius * (0.5 + Math.random() * 0.8);
+            out[i * 3 + 0] = r * Math.sin(phi) * Math.cos(theta);
+            out[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.6;
+            out[i * 3 + 2] = r * Math.cos(phi) * 0.9 - 40;
+          }
+          return out;
+        }
+
+        // the 5 formations the particle system passes through
+        const formations = [
+          sampleWord("POWER", N),
+          sampleDumbbell(N),
+          sampleWord("UP", N),
+          samplePlate(N),
+          sampleWord("FITNESS", N),
+        ];
+        // scatter cloud used mid-transition, alternating normal / heavy burst
+        const transitionClouds = [
+          scatterCloud(N, 230), // POWER -> dumbbell   (moderate)
+          scatterCloud(N, 430), // dumbbell -> UP       (HEAVY burst)
+          scatterCloud(N, 230), // UP -> plate          (moderate)
+          scatterCloud(N, 430), // plate -> FITNESS     (HEAVY burst)
+        ];
+        const introCloud = scatterCloud(N, 230);
+        const heavyTransition = [false, true, false, true];
+        const seeds = new Float32Array(N);
+        for (let i = 0; i < N; i++) seeds[i] = Math.random();
+
+        // ---------- three.js scene ----------
+        const canvas = document.getElementById("gl");
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 1, 2000);
+        camera.position.set(0, 0, 340);
+
+        const geo = new THREE.BufferGeometry();
+        const positions = new Float32Array(introCloud);
+        geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        const colors = new Float32Array(N * 3);
+        geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+
+        const sprite = (() => {
+          // soft circular point texture
+          const s = 64,
+            c = document.createElement("canvas");
+          c.width = c.height = s;
+          const x = c.getContext("2d");
+          const g = x.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+          g.addColorStop(0, "rgba(255,255,255,1)");
+          g.addColorStop(0.4, "rgba(255,255,255,.7)");
+          g.addColorStop(1, "rgba(255,255,255,0)");
+          x.fillStyle = g;
+          x.fillRect(0, 0, s, s);
+          return new THREE.CanvasTexture(c);
+        })();
+
+        const mat = new THREE.PointsMaterial({
+          size: isSmall ? 2.6 : 2.2,
+          map: sprite,
+          transparent: true,
+          depthWrite: false,
+          vertexColors: true,
+          blending: THREE.AdditiveBlending,
+        });
+        const points = new THREE.Points(geo, mat);
+        scene.add(points);
+
+        // cheap glow: a second, larger, dimmer additive layer sharing the same live
+        // position/color buffers — reads as bloom without needing postprocessing passes
+        const haloMat = new THREE.PointsMaterial({
+          size: isSmall ? 7 : 6,
+          map: sprite,
+          transparent: true,
+          depthWrite: false,
+          vertexColors: true,
+          blending: THREE.AdditiveBlending,
+          opacity: 0.35,
+        });
+        const halo = new THREE.Points(geo, haloMat);
+        scene.add(halo);
+
+        // ambient dust field for depth cueing
+        const dustN = isSmall ? 250 : 500;
+        const dustGeo = new THREE.BufferGeometry();
+        const dustPos = new Float32Array(dustN * 3);
+        for (let i = 0; i < dustN; i++) {
+          dustPos[i * 3] = (Math.random() - 0.5) * 1200;
+          dustPos[i * 3 + 1] = (Math.random() - 0.5) * 700;
+          dustPos[i * 3 + 2] = (Math.random() - 0.5) * 900 - 200;
+        }
+        dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
+        const dustMat = new THREE.PointsMaterial({
+          size: 1.4,
+          map: sprite,
+          transparent: true,
+          opacity: 0.16,
+          color: 0x7a5a1c,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+        });
+        scene.add(new THREE.Points(dustGeo, dustMat));
+
+        function resize() {
+          const w = innerWidth,
+            h = innerHeight;
+          renderer.setSize(w, h);
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+        }
+        addEventListener("resize", resize);
+        resize();
+
+        // brand colors: hot yellow near-camera, deep amber far — matches the live PowerUp site
+        const hot = new THREE.Color(0xf5de3b);
+        const cool = new THREE.Color(0xb8791f);
+        const flashColor = new THREE.Color(0xff5a36);
+        const tmpColor = new THREE.Color();
+
+        function smooth(t) {
+          t = Math.min(1, Math.max(0, t));
+          return t * t * (3 - 2 * t);
+        }
+        function staggerT(p, seed, spread = 0.55) {
+          const t = p * (1 + spread) - seed * spread;
+          return smooth(t);
+        }
+
+        // generic zone timeline: form -> hold -> transition(explode,disorient?) -> transition(reform) -> hold -> ...
+        const zones = [
+          { kind: "move", from: introCloud, to: formations[0], start: 0.0, end: 0.08, idx: 0 },
+          { kind: "hold", at: formations[0], start: 0.08, end: 0.16, idx: 0 },
+          {
+            kind: "move",
+            from: formations[0],
+            to: transitionClouds[0],
+            start: 0.16,
+            end: 0.23,
+            disorient: true,
+            heavy: heavyTransition[0],
+            idx: 1,
+          },
+          {
+            kind: "move",
+            from: transitionClouds[0],
+            to: formations[1],
+            start: 0.23,
+            end: 0.3,
+            idx: 1,
+          },
+          { kind: "hold", at: formations[1], start: 0.3, end: 0.38, idx: 1 },
+          {
+            kind: "move",
+            from: formations[1],
+            to: transitionClouds[1],
+            start: 0.38,
+            end: 0.47,
+            disorient: true,
+            heavy: heavyTransition[1],
+            idx: 2,
+          },
+          {
+            kind: "move",
+            from: transitionClouds[1],
+            to: formations[2],
+            start: 0.47,
+            end: 0.54,
+            idx: 2,
+          },
+          { kind: "hold", at: formations[2], start: 0.54, end: 0.62, idx: 2 },
+          {
+            kind: "move",
+            from: formations[2],
+            to: transitionClouds[2],
+            start: 0.62,
+            end: 0.69,
+            disorient: true,
+            heavy: heavyTransition[2],
+            idx: 3,
+          },
+          {
+            kind: "move",
+            from: transitionClouds[2],
+            to: formations[3],
+            start: 0.69,
+            end: 0.75,
+            idx: 3,
+          },
+          { kind: "hold", at: formations[3], start: 0.75, end: 0.83, idx: 3 },
+          {
+            kind: "move",
+            from: formations[3],
+            to: transitionClouds[3],
+            start: 0.83,
+            end: 0.92,
+            disorient: true,
+            heavy: heavyTransition[3],
+            idx: 4,
+          },
+          {
+            kind: "move",
+            from: transitionClouds[3],
+            to: formations[4],
+            start: 0.92,
+            end: 0.98,
+            idx: 4,
+          },
+          { kind: "hold", at: formations[4], start: 0.98, end: 1.0, idx: 4 },
+        ];
+        function zoneAt(p) {
+          for (const z of zones) if (p >= z.start && p <= z.end) return z;
+          return zones[zones.length - 1];
+        }
+
+        const camKeys = [
+          { p: 0.0, pos: [0, 0, 300], look: [0, 0, 0] },
+          { p: 0.2, pos: [46, 12, 255], look: [0, 0, 0] },
+          { p: 0.38, pos: [-30, -8, 215], look: [6, 0, 0] },
+          { p: 0.47, pos: [0, 4, 470], look: [0, 0, 0] },
+          { p: 0.62, pos: [-55, 10, 250], look: [-6, 0, 0] },
+          { p: 0.69, pos: [0, -6, 200], look: [0, 0, 0] },
+          { p: 0.92, pos: [0, 4, 480], look: [0, 0, 0] },
+          { p: 1.0, pos: [0, 0, 300], look: [0, 0, 0] },
+        ];
+        function camAt(p) {
+          for (let i = 0; i < camKeys.length - 1; i++) {
+            const a = camKeys[i],
+              b = camKeys[i + 1];
+            if (p >= a.p && p <= b.p) {
+              const t = (p - a.p) / (b.p - a.p || 1);
+              return {
+                pos: [0, 1, 2].map((k) => THREE.MathUtils.lerp(a.pos[k], b.pos[k], smooth(t))),
+                look: [0, 1, 2].map((k) => THREE.MathUtils.lerp(a.look[k], b.look[k], smooth(t))),
+              };
+            }
+          }
+          return camKeys[camKeys.length - 1];
+        }
+
+        let curP = 0;
+        let shakeMag = 0; // read by render() to jolt the camera during heavy bursts
+        let flashAmt = 0; // read by render() to punch the screen-flash overlay
+
+        function updateParticles(p) {
+          const pos = geo.attributes.position.array;
+          const col = geo.attributes.color.array;
+          const zone = zoneAt(p);
+          shakeMag = 0;
+          flashAmt = 0;
+
+          for (let i = 0; i < N; i++) {
+            const seed = seeds[i];
+            let x, y, z;
+
+            if (zone.kind === "hold") {
+              x = zone.at[i * 3];
+              y = zone.at[i * 3 + 1];
+              z = zone.at[i * 3 + 2];
+            } else {
+              const local = (p - zone.start) / (zone.end - zone.start || 1);
+              const t = staggerT(local, seed);
+              x = THREE.MathUtils.lerp(zone.from[i * 3], zone.to[i * 3], t);
+              y = THREE.MathUtils.lerp(zone.from[i * 3 + 1], zone.to[i * 3 + 1], t);
+              z = THREE.MathUtils.lerp(zone.from[i * 3 + 2], zone.to[i * 3 + 2], t);
+
+              if (zone.disorient) {
+                // "disorienting" static-like jitter that ramps up then releases into the burst —
+                // fresh randomness every frame reads as a strobe/glitch rather than a smooth wobble
+                const env =
+                  smooth(Math.min(local / 0.4, 1)) *
+                  (1 - smooth(Math.max((local - 0.75) / 0.25, 0)));
+                const amp = (zone.heavy ? 22 : 11) * env;
+                x += (Math.random() - 0.5) * amp;
+                y += (Math.random() - 0.5) * amp;
+                z += (Math.random() - 0.5) * amp * 1.4;
+
+                if (zone.heavy) {
+                  const burstEnv = Math.sin(Math.min(Math.max(local, 0), 1) * Math.PI); // peaks mid-transition
+                  shakeMag = Math.max(shakeMag, burstEnv);
+                  flashAmt = Math.max(flashAmt, Math.pow(burstEnv, 2) * 0.55);
+                }
+              }
+            }
+
+            pos[i * 3] = x;
+            pos[i * 3 + 1] = y;
+            pos[i * 3 + 2] = z;
+
+            // depth-based color: near camera = hot yellow, far = deep amber; brief white-hot
+            // flicker layered on top during a heavy disorient burst for that "raw" strobe feel
+            const depthT = THREE.MathUtils.clamp((z + 50) / 140, 0, 1);
+            tmpColor.copy(cool).lerp(hot, depthT);
+            if (zone.disorient && zone.heavy && Math.random() < flashAmt * 0.5) {
+              tmpColor.lerp(flashColor, 0.7);
+            }
+            col[i * 3] = tmpColor.r;
+            col[i * 3 + 1] = tmpColor.g;
+            col[i * 3 + 2] = tmpColor.b;
+          }
+          geo.attributes.position.needsUpdate = true;
+          geo.attributes.color.needsUpdate = true;
+
+          // point size pulses slightly during a burst — cheap way to sell "impact" without postprocessing
+          const pulse = 1 + shakeMag * 0.5;
+          mat.size = (isSmall ? 2.6 : 2.2) * pulse;
+          haloMat.size = (isSmall ? 7 : 6) * (1 + shakeMag * 0.9);
+          haloMat.opacity = 0.35 + shakeMag * 0.25;
+
+          const flash = document.getElementById("flash");
+          if (flash) flash.style.opacity = flashAmt;
+        }
+
+        updateParticles(0);
+
+        function render() {
+          const ry = Math.sin(curP * Math.PI * 2) * 0.12 + curP * 0.6;
+          const rx = Math.sin(curP * Math.PI) * 0.05;
+          points.rotation.y = halo.rotation.y = ry;
+          points.rotation.x = halo.rotation.x = rx;
+          const cam = camAt(curP);
+          const sh = shakeMag * 14; // cinematic jolt during heavy bursts
+          camera.position.set(
+            cam.pos[0] + (Math.random() - 0.5) * sh,
+            cam.pos[1] + (Math.random() - 0.5) * sh,
+            cam.pos[2] + (Math.random() - 0.5) * sh * 0.6,
+          );
+          camera.lookAt(...cam.look);
+          camera.fov = 50 - shakeMag * 4; // brief punch-in on impact
+          camera.updateProjectionMatrix();
+          renderer.render(scene, camera);
+          requestAnimationFrame(render);
+        }
+        render();
+
+        // ---------- scroll wiring ----------
+        if (!reduced) {
+          ScrollTrigger.create({
+            trigger: "#stage-wrap",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.6,
+            pin: "#pin",
+            onUpdate: (self) => {
+              curP = self.progress;
+              const zone = zoneAt(curP);
+              updateParticles(curP);
+              const idx = zone.idx;
+              document
+                .querySelectorAll(".rail i")
+                .forEach((el, i) => el.classList.toggle("on", i === idx));
+              document.getElementById("eyebrow").textContent = LABELS[idx];
+              document.getElementById("sub").innerHTML = SUBS[idx];
+              const inHold = zone.kind === "hold";
+              gsap.to(".sub, .eyebrow", {
+                opacity: inHold ? 1 : 0,
+                duration: 0.3,
+                overwrite: true,
+              });
+              gsap.to(".hint", { opacity: curP > 0.03 ? 0 : 1, duration: 0.3, overwrite: true });
+            },
+          });
+        } else {
+          updateParticles(0.1); // hold on POWER, formed, static
+          document.querySelector(".sub").style.opacity = 1;
+          document.querySelector(".eyebrow").style.opacity = 1;
+        }
+      } catch (err) {
+        console.error(err);
+        const f = document.getElementById("fatal");
+        f.style.display = "flex";
+        f.textContent =
+          "Render failed to start: " +
+          err.message +
+          " — open this file\u2019s console (F12) for details, or check that WebGL is enabled in this browser.";
+      }
+    </script>
+  </body>
+</html>
