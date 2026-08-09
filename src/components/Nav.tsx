@@ -29,10 +29,12 @@ export function Nav() {
             : "border border-transparent"
         }`}
       >
-        <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3">
-          <span className="grid h-7 w-7 sm:h-9 sm:w-9 shrink-0 place-items-center clip-hex bg-volt text-carbon font-display text-sm sm:text-lg leading-none pt-0.5 sm:pt-1 font-bold">
-            P
-          </span>
+        <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3 group">
+          <img
+            src="/logo.png"
+            alt="PowerUp Fitness Logo"
+            className="h-8 w-auto sm:h-9 object-contain transition-transform duration-300 group-hover:scale-105"
+          />
           <span className="font-display text-base sm:text-xl leading-none tracking-wide font-black">
             POWER<span className="text-volt">UP</span>
           </span>
