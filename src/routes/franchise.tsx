@@ -569,10 +569,10 @@ function Franchise() {
                           <Icon className="h-5 w-5" />
                         </div>
                       </div>
-                      <h3 className="mt-5 font-display text-xl font-bold uppercase leading-tight text-white group-hover:text-volt transition-colors">
+                      <h3 className="mt-5 font-display text-xl font-bold uppercase leading-tight text-white group-hover:text-volt transition-colors min-h-[3.25rem] flex items-start">
                         {item.title}
                       </h3>
-                      <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
+                      <p className="mt-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                         {item.copy}
                       </p>
                     </div>
