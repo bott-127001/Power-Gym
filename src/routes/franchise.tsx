@@ -616,13 +616,17 @@ function Franchise() {
                 return (
                   <div
                     key={rs.title}
-                    className="rounded-2xl glass bg-black/40 border border-border/30 p-6"
+                    className="rounded-2xl glass bg-black/40 border border-border/30 p-6 flex flex-col justify-between"
                   >
-                    <Icon className="h-6 w-6 text-volt mb-4" />
-                    <h4 className="font-display text-lg font-bold text-white uppercase">
-                      {rs.title}
-                    </h4>
-                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed">{rs.copy}</p>
+                    <div>
+                      <Icon className="h-6 w-6 text-volt mb-4" />
+                      <h4 className="font-display text-lg font-bold text-white uppercase min-h-[2.75rem] flex items-start">
+                        {rs.title}
+                      </h4>
+                      <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {rs.copy}
+                      </p>
+                    </div>
                   </div>
                 );
               })}
