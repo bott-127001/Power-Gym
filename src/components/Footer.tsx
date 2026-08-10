@@ -8,12 +8,21 @@ export function Footer() {
       <div className="relative mx-auto max-w-6xl px-6 py-20">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1.1fr_0.9fr]">
           <div className="min-w-0">
-            <h2 className="font-display text-6xl leading-[0.8] sm:text-7xl">
-              POWER<span className="text-volt">UP</span>
-              <br />
-              FITNESS
-            </h2>
-            <p className="mt-5 max-w-sm text-base leading-relaxed text-muted-foreground">
+            <Link to="/" className="inline-flex items-center gap-3.5 group mb-4">
+              <img
+                src="/logo.jpeg"
+                alt="Power Up Fitness Logo"
+                className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl object-cover border border-volt/30 shadow-[0_0_20px_rgba(255,222,71,0.2)] transition-transform group-hover:scale-105"
+              />
+              <div>
+                <h2 className="font-display text-4xl sm:text-5xl leading-[0.85] font-black">
+                  POWER<span className="text-volt">UP</span>
+                  <br />
+                  FITNESS
+                </h2>
+              </div>
+            </Link>
+            <p className="mt-2 max-w-sm text-base leading-relaxed text-muted-foreground">
               Next-level biomechanics, elite coaching, and a community built on progression. Bhukum
               · Mahalunge, Pune.
             </p>
