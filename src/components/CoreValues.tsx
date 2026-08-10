@@ -68,6 +68,16 @@ export function CoreValues() {
   const [isPaused, setIsPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
+  const [windowWidth, setWindowWidth] = useState<number>(
+    typeof window !== "undefined" ? window.innerWidth : 1200,
+  );
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const total = VALUES.length;
 
   const handlePrev = useCallback(() => {
@@ -191,6 +201,22 @@ export function CoreValues() {
 
             const isActive = offset === 0;
 
+            // Responsive translation steps
+            const isMobile = windowWidth < 640;
+            const isTablet = windowWidth >= 640 && windowWidth < 1024;
+
+            const step1 = isMobile ? 32 : isTablet ? 90 : 150;
+            const step2 = isMobile ? 60 : isTablet ? 170 : 290;
+            const step3 = isMobile ? 85 : isTablet ? 240 : 410;
+
+            const scale1 = isMobile ? 0.94 : 0.92;
+            const scale2 = isMobile ? 0.88 : 0.84;
+            const scale3 = isMobile ? 0.82 : 0.76;
+
+            const opacity1 = isMobile ? 0.75 : 0.85;
+            const opacity2 = isMobile ? 0.45 : 0.6;
+            const opacity3 = isMobile ? 0.2 : 0.35;
+
             // Layering & transforms
             let transformStyle = "";
             let zIndex = 10;
@@ -203,34 +229,34 @@ export function CoreValues() {
               opacity = 1;
             } else if (offset === -1) {
               // Left Card 1
-              transformStyle = "translate3d(-150px, 12px, 0) scale(0.92)";
+              transformStyle = `translate3d(-${step1}px, 12px, 0) scale(${scale1})`;
               zIndex = 30;
-              opacity = 0.85;
+              opacity = opacity1;
             } else if (offset === 1) {
               // Right Card 1
-              transformStyle = "translate3d(150px, 12px, 0) scale(0.92)";
+              transformStyle = `translate3d(${step1}px, 12px, 0) scale(${scale1})`;
               zIndex = 30;
-              opacity = 0.85;
+              opacity = opacity1;
             } else if (offset === -2) {
               // Left Card 2
-              transformStyle = "translate3d(-290px, 24px, 0) scale(0.84)";
+              transformStyle = `translate3d(-${step2}px, 24px, 0) scale(${scale2})`;
               zIndex = 20;
-              opacity = 0.6;
+              opacity = opacity2;
             } else if (offset === 2) {
               // Right Card 2
-              transformStyle = "translate3d(290px, 24px, 0) scale(0.84)";
+              transformStyle = `translate3d(${step2}px, 24px, 0) scale(${scale2})`;
               zIndex = 20;
-              opacity = 0.6;
+              opacity = opacity2;
             } else if (offset === -3) {
               // Left Card 3
-              transformStyle = "translate3d(-410px, 36px, 0) scale(0.76)";
+              transformStyle = `translate3d(-${step3}px, 36px, 0) scale(${scale3})`;
               zIndex = 10;
-              opacity = 0.35;
+              opacity = opacity3;
             } else if (offset === 3) {
               // Right Card 3
-              transformStyle = "translate3d(410px, 36px, 0) scale(0.76)";
+              transformStyle = `translate3d(${step3}px, 36px, 0) scale(${scale3})`;
               zIndex = 10;
-              opacity = 0.35;
+              opacity = opacity3;
             }
 
             return (
