@@ -78,7 +78,6 @@ export function InterlockingSystemCards() {
 
           // Overlap negative margins to create continuous interlocking chain
           const overlapClass = idx > 0 ? "-ml-6 xl:-ml-8" : "";
-          const elevationClass = isEven ? "-translate-y-4" : "translate-y-2";
 
           return (
             <div
@@ -86,9 +85,9 @@ export function InterlockingSystemCards() {
               onMouseEnter={() => setHoveredIdx(idx)}
               onMouseLeave={() => setHoveredIdx(null)}
               style={{ zIndex: isHovered ? 30 : 20 - idx }}
-              className={`relative transition-all duration-500 ${overlapClass} ${elevationClass}`}
+              className={`relative transition-all duration-500 ${overlapClass}`}
             >
-              {/* Connector Outer Circuit Bracket to Next Card (inspired by reference image) */}
+              {/* Connector Outer Circuit Bracket to Next Card */}
               {idx < PILLARS.length - 1 && (
                 <div className="pointer-events-none absolute -right-5 top-1/2 -translate-y-1/2 z-40 hidden xl:flex items-center">
                   <div className="h-[2px] w-10 bg-linear-to-r from-volt/60 to-volt/20" />
@@ -98,9 +97,9 @@ export function InterlockingSystemCards() {
 
               {/* Interlocking Hexagonal/Chamfered Geometric Panel */}
               <div
-                className={`group relative overflow-hidden rounded-[2rem] p-7 xl:p-8 transition-all duration-500 ${
+                className={`group relative overflow-hidden rounded-[2rem] p-7 xl:p-8 transition-all duration-500 flex flex-col justify-between ${
                   isHovered
-                    ? "bg-carbon-deep/98 border-2 border-volt/80 shadow-[0_25px_60px_-15px_rgba(255,222,71,0.25)] -translate-y-3 scale-[1.02]"
+                    ? "bg-carbon-deep/98 border-2 border-volt/80 shadow-[0_25px_60px_-15px_rgba(255,222,71,0.25)] -translate-y-2 scale-[1.01]"
                     : isAnyHovered
                       ? "bg-carbon-deep/75 border border-white/5 opacity-80"
                       : "bg-carbon-deep/90 border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.6)]"
@@ -126,47 +125,50 @@ export function InterlockingSystemCards() {
                   }`}
                 />
 
-                {/* Top Section: Editorial Number & Icon */}
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`font-display text-4xl xl:text-5xl font-black tracking-tight transition-colors duration-300 ${
-                      isHovered ? "text-volt" : "text-white/20"
-                    }`}
-                  >
-                    {pillar.n}
-                  </span>
+                <div>
+                  {/* Top Section: Editorial Number & Icon */}
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`font-display text-4xl xl:text-5xl font-black tracking-tight transition-colors duration-300 ${
+                        isHovered ? "text-volt" : "text-white/20"
+                      }`}
+                    >
+                      {pillar.n}
+                    </span>
 
-                  <div
-                    className={`grid h-11 w-11 place-items-center rounded-2xl border transition-all duration-300 ${
-                      isHovered
-                        ? "bg-volt text-carbon border-volt shadow-[0_0_15px_rgba(255,222,71,0.4)]"
-                        : "bg-black/60 text-volt border-volt/30"
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" />
+                    <div
+                      className={`grid h-11 w-11 place-items-center rounded-2xl border transition-all duration-300 ${
+                        isHovered
+                          ? "bg-volt text-carbon border-volt shadow-[0_0_15px_rgba(255,222,71,0.4)]"
+                          : "bg-black/60 text-volt border-volt/30"
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </div>
                   </div>
+
+                  {/* Badge / Metric Stat */}
+                  <div className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-3 py-1 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-volt">
+                    <span className="h-1 w-1 rounded-full bg-volt" />
+                    {pillar.stat}
+                  </div>
+
+                  {/* Title & Subtitle block with uniform height */}
+                  <div className="mt-4 min-h-[4.25rem] flex flex-col justify-start">
+                    <h3 className="font-display text-xl xl:text-2xl font-black uppercase tracking-tight text-white group-hover:text-volt transition-colors leading-tight">
+                      {pillar.title}
+                    </h3>
+
+                    <p className="text-[0.68rem] font-mono uppercase tracking-wider text-neutral-400 mt-1">
+                      {pillar.subtitle}
+                    </p>
+                  </div>
+
+                  {/* Description */}
+                  <p className="mt-3 text-xs xl:text-sm text-muted-foreground leading-relaxed">
+                    {pillar.copy}
+                  </p>
                 </div>
-
-                {/* Badge / Metric Stat */}
-                <div className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-3 py-1 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-volt">
-                  <span className="h-1 w-1 rounded-full bg-volt" />
-                  {pillar.stat}
-                </div>
-
-                {/* Title */}
-                <h3 className="mt-4 font-display text-xl xl:text-2xl font-black uppercase tracking-tight text-white group-hover:text-volt transition-colors">
-                  {pillar.title}
-                </h3>
-
-                {/* Subtitle */}
-                <p className="text-[0.68rem] font-mono uppercase tracking-wider text-neutral-400 mt-0.5">
-                  {pillar.subtitle}
-                </p>
-
-                {/* Description */}
-                <p className="mt-4 text-xs xl:text-sm text-muted-foreground leading-relaxed">
-                  {pillar.copy}
-                </p>
 
                 {/* Bottom Highlight Key Indicator */}
                 <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[0.62rem] font-mono">
