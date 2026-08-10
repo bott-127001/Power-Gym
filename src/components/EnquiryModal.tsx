@@ -211,23 +211,23 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="enquiry-modal-title"
-      className="fixed inset-0 z-100 flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+      className="fixed inset-0 z-100 overflow-y-auto overscroll-contain p-3 sm:p-6 flex items-start sm:items-center justify-center"
     >
       {/* ───────────── CINEMATIC BACKDROP ───────────── */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-carbon-deep/75 backdrop-blur-md transition-opacity duration-400 animate-fade-in"
+        className="fixed inset-0 bg-carbon-deep/80 backdrop-blur-md transition-opacity duration-400 animate-fade-in"
         aria-hidden="true"
       />
 
-      {/* ───────────── GLASS MODAL CONTAINER ───────────── */}
+      {/* ───────────── GLASS MODAL CONTAINER (SCROLLABLE ON MOBILE) ───────────── */}
       <div
         ref={modalRef}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-[500px] my-auto overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] glass-strong bg-carbon-deep/95 border border-volt/35 p-6 sm:p-8 shadow-[0_25px_80px_-15px_rgba(0,0,0,0.95)] transition-all duration-400 animate-scale-up [max-height:min(94dvh,720px)] flex flex-col justify-between"
+        className="relative w-full max-w-[500px] my-auto rounded-[2rem] sm:rounded-[2.5rem] glass-strong bg-carbon-deep/95 border border-volt/35 p-5 sm:p-8 shadow-[0_25px_80px_-15px_rgba(0,0,0,0.95)] transition-all duration-400 animate-scale-up max-h-[92dvh] overflow-y-auto overscroll-contain flex flex-col justify-between [touch-action:pan-y] [-webkit-overflow-scrolling:touch]"
       >
         {/* Top Decorative Ambient Highlights */}
-        <div className="pointer-events-none absolute -top-24 -left-24 h-48 w-48 rounded-full bg-volt/15 blur-3xl" />
+        <div className="pointer-events-none absolute -top-24 -left-24 h-48 w-48 rounded-full bg-volt/15 blur-3xl animate-pulse-glow" />
             {/* ───────────── HEADER ───────────── */}
         <div className="relative flex items-start justify-between gap-4">
           <div>
