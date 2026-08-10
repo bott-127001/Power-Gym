@@ -16,8 +16,7 @@ export function Footer() {
               />
             </Link>
             <p className="mt-1 max-w-sm text-base leading-relaxed text-muted-foreground">
-              Next-level biomechanics, elite coaching, and a community built on progression. Bhukum
-              · Mahalunge, Pune.
+              Next-level biomechanics, elite coaching, and a community built on progression in Pune.
             </p>
           </div>
 
