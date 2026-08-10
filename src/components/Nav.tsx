@@ -29,15 +29,12 @@ export function Nav() {
             : "border border-transparent"
         }`}
       >
-        <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3 group">
+        <Link to="/" className="flex min-w-0 items-center group">
           <img
             src="/logo.jpeg"
-            alt="Power Up Fitness Logo"
-            className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover shrink-0 border border-volt/40 shadow-[0_0_12px_rgba(255,222,71,0.3)] transition-transform group-hover:scale-105"
+            alt="Power Up Fitness"
+            className="h-9 sm:h-11 w-auto max-w-[140px] sm:max-w-[170px] rounded-xl object-contain shrink-0 transition-transform duration-300 group-hover:scale-105"
           />
-          <span className="font-display text-base sm:text-xl leading-none tracking-wide font-black">
-            POWER<span className="text-volt">UP</span>
-          </span>
         </Link>
 
         <div className="ml-auto hidden items-center gap-1 md:flex">
