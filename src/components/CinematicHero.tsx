@@ -322,17 +322,17 @@ export function CinematicHero() {
             ref={overlayRef}
             className="pointer-events-none absolute inset-0 transition-opacity duration-500"
           >
-            {/* Top vignette for clean navigation readability */}
-            <div className="absolute inset-x-0 top-0 h-36 sm:h-44 bg-linear-to-b from-carbon-deep/90 via-carbon-deep/45 to-transparent" />
+            {/* Top vignette for clean navigation readability (reduced by ~20%) */}
+            <div className="absolute inset-x-0 top-0 h-32 sm:h-40 bg-linear-to-b from-carbon-deep/75 via-carbon-deep/35 to-transparent" />
 
-            {/* Bottom rich vignette */}
-            <div className="absolute inset-x-0 bottom-0 h-64 sm:h-[30rem] bg-linear-to-t from-carbon-deep via-carbon/70 to-transparent" />
+            {/* Bottom rich vignette (reduced by ~20%) */}
+            <div className="absolute inset-x-0 bottom-0 h-56 sm:h-[26rem] bg-linear-to-t from-carbon-deep/80 via-carbon/50 to-transparent" />
 
-            {/* Subtle radial cinematic vignette */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(15,10,8,0.65)_100%)]" />
+            {/* Subtle radial cinematic vignette (reduced by ~20%) */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(15,10,8,0.50)_100%)]" />
 
             {/* Filmic noise */}
-            <div className="absolute inset-0 noise opacity-20" />
+            <div className="absolute inset-0 noise opacity-15" />
           </div>
 
           {/* Cinematic Soft Background Depth-of-Field Blur for Final Logo Reveal */}
