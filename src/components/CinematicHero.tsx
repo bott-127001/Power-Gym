@@ -9,9 +9,14 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const TOTAL_FRAMES = 240;
+const START_FRAME = 47;
+const END_FRAME = 240;
+const TOTAL_FRAMES = END_FRAME - START_FRAME + 1; // 194 frames (47 to 240)
 
-const getFramePath = (index: number) => `/hero-frames/frame_${String(index).padStart(4, "0")}.jpg`;
+const getFramePath = (index: number) => {
+  const frameNum = START_FRAME + Math.max(0, Math.min(TOTAL_FRAMES - 1, index));
+  return `/hero-frames/frame_${String(frameNum).padStart(4, "0")}.jpg`;
+};
 
 export function CinematicHero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,7 +38,7 @@ export function CinematicHero() {
 
   // Cached frame images
   const imagesRef = useRef<HTMLImageElement[]>([]);
-  const currentFrameRef = useRef<number>(1);
+  const currentFrameRef = useRef<number>(0);
   const lastDrawnFrameRef = useRef<number>(-1);
 
   const [, setLoadedCount] = useState(0);
@@ -46,7 +51,8 @@ export function CinematicHero() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const img = imagesRef.current[frameIndex - 1];
+    const clampedIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, frameIndex));
+    const img = imagesRef.current[clampedIndex];
     if (!img || !img.complete || img.naturalWidth === 0) return;
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -86,7 +92,7 @@ export function CinematicHero() {
     ctx.drawImage(img, drawX, drawY, drawW, drawH);
     ctx.restore();
 
-    lastDrawnFrameRef.current = frameIndex;
+    lastDrawnFrameRef.current = clampedIndex;
   }, []);
 
   // Progressive frame loading optimized for desktop and mobile
@@ -95,23 +101,23 @@ export function CinematicHero() {
     let isMounted = true;
     let loaded = 0;
 
-    // 1. Load frame 1 immediately for instant render
+    // 1. Load initial frame (frame_0047.jpg) immediately for instant first render
     const firstImg = new Image();
-    firstImg.src = getFramePath(1);
+    firstImg.src = getFramePath(0);
     firstImg.onload = () => {
       if (!isMounted) return;
       imagesRef.current[0] = firstImg;
       setInitialFrameReady(true);
-      renderFrame(1);
+      renderFrame(0);
     };
 
-    // 2. Load priority initial batch (frames 2 to 30)
-    for (let i = 2; i <= Math.min(30, TOTAL_FRAMES); i++) {
+    // 2. Load priority initial batch (next 25 frames)
+    for (let i = 1; i <= Math.min(25, TOTAL_FRAMES - 1); i++) {
       const img = new Image();
       img.src = getFramePath(i);
       img.onload = () => {
         if (!isMounted) return;
-        imagesRef.current[i - 1] = img;
+        imagesRef.current[i] = img;
         loaded++;
         setLoadedCount(loaded);
         if (currentFrameRef.current === i) {
@@ -120,15 +126,15 @@ export function CinematicHero() {
       };
     }
 
-    // 3. Load remaining frames sequentially to preserve mobile bandwidth and memory
+    // 3. Load remaining frames sequentially to preserve bandwidth and memory
     const loadRemaining = () => {
-      for (let i = 31; i <= TOTAL_FRAMES; i++) {
+      for (let i = 26; i < TOTAL_FRAMES; i++) {
         if (!isMounted) return;
         const img = new Image();
         img.src = getFramePath(i);
         img.onload = () => {
           if (!isMounted) return;
-          imagesRef.current[i - 1] = img;
+          imagesRef.current[i] = img;
           loaded++;
           setLoadedCount(loaded);
           if (currentFrameRef.current === i) {
@@ -138,7 +144,7 @@ export function CinematicHero() {
       }
     };
 
-    const timer = setTimeout(loadRemaining, 200);
+    const timer = setTimeout(loadRemaining, 150);
 
     const handleResize = () => {
       renderFrame(currentFrameRef.current);
@@ -176,7 +182,7 @@ export function CinematicHero() {
     if (!container || !stage) return;
 
     const ctx = gsap.context(() => {
-      const frameSequence = { frame: 1 };
+      const frameSequence = { frame: 0 };
 
       const scrollTl = gsap.timeline({
         scrollTrigger: {
@@ -201,18 +207,18 @@ export function CinematicHero() {
         },
       });
 
-      // Frame scrub tween: scrubs through every single frame from 1 to 240 on all viewports
+      // Frame scrub tween: scrubs through every single frame from 0 to TOTAL_FRAMES - 1 on all viewports
       scrollTl.to(
         frameSequence,
         {
-          frame: TOTAL_FRAMES,
+          frame: TOTAL_FRAMES - 1,
           snap: "frame",
           duration: 0.76,
           ease: "none",
           onUpdate: () => {
             const targetIndex = Math.max(
-              1,
-              Math.min(TOTAL_FRAMES, Math.round(frameSequence.frame)),
+              0,
+              Math.min(TOTAL_FRAMES - 1, Math.round(frameSequence.frame)),
             );
             if (targetIndex !== currentFrameRef.current) {
               currentFrameRef.current = targetIndex;
@@ -307,7 +313,7 @@ export function CinematicHero() {
         {/* ───────────── HTML5 FULL-SCREEN CANVAS ───────────── */}
         <div
           className="absolute inset-0 overflow-hidden bg-cover bg-center"
-          style={{ backgroundImage: "url('/hero-frames/frame_0001.jpg')" }}
+          style={{ backgroundImage: `url('${getFramePath(0)}')` }}
         >
           <canvas ref={canvasRef} className="absolute inset-0 h-full w-full block object-cover" />
 
