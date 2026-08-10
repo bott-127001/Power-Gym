@@ -132,7 +132,7 @@ function About() {
       <section className="relative overflow-hidden py-24 border-b border-border/20">
         <Atmosphere variant="c" />
         <div className="relative mx-auto grid max-w-6xl gap-16 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <Reveal>
+          <Reveal variant="left">
             <p className="text-xl sm:text-2xl text-[24px] uppercase tracking-[0.2em] text-volt font-bold">
               The Heritage
             </p>
@@ -160,8 +160,8 @@ function About() {
             </div>
           </Reveal>
 
-          <Reveal delay={140} className="relative">
-            <div className="relative overflow-hidden rounded-[2.5rem] border border-border/40 shadow-2xl">
+          <Reveal delay={140} variant="right" className="relative">
+            <div className="relative overflow-hidden rounded-[2.5rem] border border-border/40 shadow-2xl card-hover-fx">
               <img
                 src={facility}
                 alt="Power Up Fitness premium training floor"
@@ -172,7 +172,7 @@ function About() {
               />
               <div className="absolute inset-0 bg-linear-to-t from-carbon-deep via-transparent to-transparent opacity-80" />
             </div>
-            <div className="absolute -left-6 bottom-8 clay rounded-3xl px-7 py-5 border border-volt/30 animate-float-soft shadow-xl">
+            <div className="absolute -left-6 bottom-8 clay rounded-3xl px-7 py-5 border border-volt/30 animate-float shadow-xl">
               <p className="font-display text-4xl leading-none text-volt">5,000+</p>
               <p className="mt-2 text-[0.62rem] uppercase tracking-[0.24em] text-muted-foreground font-bold">
                 Transformed Lives
@@ -186,7 +186,7 @@ function About() {
       <section className="relative overflow-hidden py-28 border-b border-border/20 bg-[#070707]">
         <Atmosphere variant="d" />
         <div className="relative mx-auto max-w-6xl px-6">
-          <Reveal>
+          <Reveal variant="scale">
             <p className="text-xl sm:text-2xl text-[24px] uppercase tracking-[0.2em] text-volt font-bold text-center">
               Purpose & Direction
             </p>
@@ -197,12 +197,12 @@ function About() {
 
           <div className="mt-16 grid gap-8 lg:grid-cols-2">
             {/* 1. OUR MISSION CARD */}
-            <Reveal delay={100}>
-              <div className="group relative h-full rounded-[2.5rem] glass-strong bg-carbon-deep/95 border-2 border-white/10 p-8 sm:p-12 transition-all duration-500 hover:border-volt/70 hover:shadow-[0_25px_60px_-15px_rgba(255,222,71,0.2)] flex flex-col justify-between">
+            <Reveal delay={100} variant="left">
+              <div className="group relative h-full rounded-[2.5rem] glass-strong bg-carbon-deep/95 border-2 border-white/10 p-8 sm:p-12 card-hover-fx flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="grid h-14 w-14 place-items-center rounded-2xl bg-volt/15 text-volt border border-volt/30 group-hover:bg-volt group-hover:text-carbon transition-colors duration-300">
-                      <Compass className="h-7 w-7" />
+                    <div className="grid h-14 w-14 place-items-center rounded-2xl bg-volt/15 text-volt border border-volt/30 group-hover:bg-volt group-hover:text-carbon transition-colors duration-300 shadow-md">
+                      <Compass className="h-7 w-7 icon-bounce" />
                     </div>
                     <span className="rounded-full bg-white/5 border border-white/10 px-4 py-1 text-[0.62rem] font-bold uppercase tracking-[0.24em] text-volt">
                       Our Mission
@@ -229,12 +229,12 @@ function About() {
             </Reveal>
 
             {/* 2. OUR VISION CARD */}
-            <Reveal delay={200}>
-              <div className="group relative h-full rounded-[2.5rem] glass-strong bg-carbon-deep/95 border-2 border-volt/50 p-8 sm:p-12 transition-all duration-500 hover:border-volt hover:shadow-[0_25px_60px_-15px_rgba(255,222,71,0.3)] shadow-[0_15px_40px_rgba(0,0,0,0.5)] flex flex-col justify-between">
+            <Reveal delay={200} variant="right">
+              <div className="group relative h-full rounded-[2.5rem] glass-strong bg-carbon-deep/95 border-2 border-volt/50 p-8 sm:p-12 card-hover-fx shadow-[0_15px_40px_rgba(0,0,0,0.5)] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between">
                     <div className="grid h-14 w-14 place-items-center rounded-2xl bg-volt text-carbon shadow-[0_0_20px_rgba(255,222,71,0.4)]">
-                      <Eye className="h-7 w-7" />
+                      <Eye className="h-7 w-7 icon-bounce" />
                     </div>
                     <span className="rounded-full bg-volt px-4 py-1 text-[0.62rem] font-bold uppercase tracking-[0.24em] text-carbon">
                       Our Vision
@@ -265,7 +265,7 @@ function About() {
       <section className="relative overflow-hidden py-28 border-b border-border/20">
         <Atmosphere variant="a" />
         <div className="relative mx-auto max-w-6xl px-6">
-          <Reveal>
+          <Reveal variant="scale">
             <p className="text-xl sm:text-2xl text-[24px] uppercase tracking-[0.2em] text-volt font-bold text-center">
               The Six Principles
             </p>
@@ -282,15 +282,15 @@ function About() {
             {CORE_VALUES.map((val, idx) => {
               const Icon = val.icon;
               return (
-                <Reveal key={val.n} delay={idx * 70}>
-                  <div className="group relative h-full flex flex-col justify-between rounded-[2.2rem] glass-strong bg-carbon-deep/90 border border-white/10 p-8 transition-all duration-500 hover:border-volt/60 hover:shadow-[0_20px_50px_-15px_rgba(255,222,71,0.2)] hover:-translate-y-1.5">
+                <Reveal key={val.n} delay={idx * 70} variant="scale">
+                  <div className="group relative h-full flex flex-col justify-between rounded-[2.2rem] glass-strong bg-carbon-deep/90 border border-white/10 p-8 card-hover-fx">
                     <div>
                       <div className="flex items-center justify-between">
                         <span className="font-display text-4xl font-black text-muted-foreground/30 group-hover:text-volt transition-colors">
                           {val.n}
                         </span>
-                        <div className="grid h-11 w-11 place-items-center rounded-2xl bg-volt/15 text-volt border border-volt/30 group-hover:bg-volt group-hover:text-carbon transition-all duration-300">
-                          <Icon className="h-5 w-5" />
+                        <div className="grid h-11 w-11 place-items-center rounded-2xl bg-volt/15 text-volt border border-volt/30 group-hover:bg-volt group-hover:text-carbon transition-all duration-300 shadow-sm">
+                          <Icon className="h-5 w-5 icon-bounce" />
                         </div>
                       </div>
 
@@ -305,7 +305,7 @@ function About() {
 
                     <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[0.62rem] font-mono text-neutral-500">
                       <span>Principle {val.n} of 06</span>
-                      <span className="h-1.5 w-1.5 rounded-full bg-volt/50 group-hover:bg-volt transition-colors" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-volt/50 group-hover:bg-volt transition-colors animate-pulse" />
                     </div>
                   </div>
                 </Reveal>
@@ -319,7 +319,7 @@ function About() {
       <section className="relative overflow-hidden py-28">
         <Atmosphere variant="c" />
         <div className="relative mx-auto max-w-4xl px-6">
-          <Reveal>
+          <Reveal variant="scale">
             <p className="text-xl sm:text-2xl text-[24px] uppercase tracking-[0.2em] text-volt font-bold">
               Facility Standard
             </p>
@@ -331,9 +331,9 @@ function About() {
 
           <div className="mt-14 border-l-2 border-volt/30 pl-8 sm:pl-12 space-y-12">
             {TIMELINE.map(([n, title, copy], i) => (
-              <Reveal key={n} delay={i * 90}>
-                <div className="relative group">
-                  <span className="absolute -left-[3.05rem] sm:-left-[4.05rem] top-0 grid h-9 w-9 place-items-center rounded-full bg-volt font-display text-carbon text-sm font-black shadow-[0_0_12px_rgba(255,222,71,0.4)]">
+              <Reveal key={n} delay={i * 90} variant="right">
+                <div className="relative group card-hover-fx p-4 rounded-2xl">
+                  <span className="absolute -left-[3.05rem] sm:-left-[4.05rem] top-4 grid h-9 w-9 place-items-center rounded-full bg-volt font-display text-carbon text-sm font-black shadow-[0_0_12px_rgba(255,222,71,0.4)] group-hover:scale-110 transition-transform">
                     {n}
                   </span>
                   <h3 className="font-display text-2xl sm:text-3xl uppercase font-black text-white group-hover:text-volt transition-colors">

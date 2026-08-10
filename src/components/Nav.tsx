@@ -83,24 +83,25 @@ export function Nav() {
       </nav>
 
       {open && (
-        <div className="mx-auto mt-2 max-w-6xl overflow-hidden rounded-2xl sm:rounded-3xl glass-strong bg-carbon-deep/90 p-2.5 sm:p-3 md:hidden border border-border/30 shadow-2xl">
-          {NAV.map((item) => (
+        <div className="mx-auto mt-2 max-w-6xl overflow-hidden rounded-2xl sm:rounded-3xl glass-strong bg-carbon-deep/95 p-3 sm:p-4 md:hidden border border-volt/30 shadow-2xl animate-scale-up">
+          {NAV.map((item, idx) => (
             <Link
               key={item.to}
               to={item.to}
-              className="block rounded-xl sm:rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-glass hover:text-volt"
+              style={{ animationDelay: `${idx * 40}ms` }}
+              className="block rounded-xl sm:rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all hover:bg-volt/15 hover:text-volt animate-fade-in"
             >
               {item.label}
             </Link>
           ))}
-          <div className="pt-2">
+          <div className="pt-2 border-t border-border/30 mt-1">
             <button
               type="button"
               onClick={() => {
                 setOpen(false);
                 handleOpenEnquiry();
               }}
-              className="w-full rounded-xl bg-volt px-4 py-3 text-xs font-bold uppercase tracking-[0.18em] text-carbon cursor-pointer"
+              className="w-full rounded-full bg-volt py-3 text-center text-xs font-bold uppercase tracking-[0.18em] text-carbon transition-all duration-300 active:scale-98 shadow-[0_4px_20px_rgba(255,222,71,0.4)] cursor-pointer"
             >
               Free Trial
             </button>

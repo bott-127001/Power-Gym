@@ -131,8 +131,8 @@ function Contact() {
       <section className="relative overflow-hidden pb-28">
         <Atmosphere variant="d" />
         <div className="relative mx-auto grid max-w-6xl gap-10 px-6 lg:grid-cols-[1.05fr_0.95fr]">
-          <Reveal>
-            <form onSubmit={handleSubmit} className="clay rounded-[2.5rem] p-8 sm:p-10">
+          <Reveal variant="left">
+            <form onSubmit={handleSubmit} className="clay rounded-[2.5rem] p-8 sm:p-10 card-hover-fx">
               <p className="text-[0.62rem] uppercase tracking-[0.3em] text-volt">
                 Schedule appointment
               </p>
@@ -156,7 +156,7 @@ function Contact() {
               )}
 
               {submissionId && (
-                <div className="mt-6 rounded-2xl border border-volt/40 bg-volt/10 p-4 text-xs text-foreground flex items-start gap-2.5">
+                <div className="mt-6 rounded-2xl border border-volt/40 bg-volt/10 p-4 text-xs text-foreground flex items-start gap-2.5 animate-scale-up">
                   <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5 text-volt" />
                   <div className="flex-1">
                     <p className="font-semibold text-volt">Enquiry Recorded Successfully!</p>
@@ -266,7 +266,7 @@ function Contact() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="group relative mt-6 w-full overflow-hidden rounded-full bg-volt px-8 py-4 text-sm font-bold uppercase tracking-[0.22em] text-carbon transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_60px_-16px_var(--volt)] disabled:opacity-75 cursor-pointer"
+                className="group relative mt-6 w-full overflow-hidden rounded-full bg-volt px-8 py-4 text-sm font-bold uppercase tracking-[0.22em] text-carbon transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_60px_-16px_var(--volt)] disabled:opacity-75 cursor-pointer active:scale-98"
               >
                 <span className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
                 <span className="relative flex items-center justify-center gap-2">
@@ -275,7 +275,7 @@ function Contact() {
                   ) : (
                     <>
                       <span>Submit & Continue to WhatsApp</span>
-                      <Send className="h-4 w-4" />
+                      <Send className="h-4 w-4 icon-bounce" />
                     </>
                   )}
                 </span>
@@ -288,8 +288,8 @@ function Contact() {
           </Reveal>
 
           <div className="space-y-6">
-            <Reveal delay={100}>
-              <div className="metal clip-angled p-9">
+            <Reveal delay={100} variant="right">
+              <div className="metal clip-angled p-9 card-hover-fx">
                 <p className="text-[0.62rem] uppercase tracking-[0.3em] text-volt">
                   Contact details
                 </p>
@@ -305,7 +305,7 @@ function Contact() {
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-foreground">{b.name} Club</span>
                         {b.status === "upcoming" && (
-                          <span className="rounded-full bg-volt/20 border border-volt/50 px-2 py-0.5 text-[0.55rem] font-bold uppercase tracking-wider text-volt">
+                          <span className="rounded-full bg-volt/20 border border-volt/50 px-2 py-0.5 text-[0.55rem] font-bold uppercase tracking-wider text-volt animate-pulse">
                             Coming Soon
                           </span>
                         )}
@@ -325,8 +325,8 @@ function Contact() {
               </div>
             </Reveal>
 
-            <Reveal delay={180}>
-              <div className="glass-strong rounded-[2.5rem] p-9">
+            <Reveal delay={180} variant="right">
+              <div className="glass-strong rounded-[2.5rem] p-9 card-hover-fx">
                 <p className="font-display text-3xl leading-none">START A CONVERSATION</p>
                 <p className="mt-3 text-sm text-muted-foreground">
                   Membership, personal training or franchise enquiries — choose your branch:

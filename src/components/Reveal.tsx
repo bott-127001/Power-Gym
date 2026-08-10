@@ -3,10 +3,12 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 export function Reveal({
   children,
   delay = 0,
+  variant = "up",
   className = "",
 }: {
   children: ReactNode;
   delay?: number;
+  variant?: "up" | "left" | "right" | "scale" | "blur";
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -53,10 +55,12 @@ export function Reveal({
     return () => observer.disconnect();
   }, []);
 
+  const variantClass = variant !== "up" ? `reveal-${variant}` : "";
+
   return (
     <div
       ref={ref}
-      className={`reveal ${shown ? "reveal-in" : ""} ${className}`}
+      className={`reveal ${variantClass} ${shown ? "reveal-in" : ""} ${className}`}
       style={{
         transitionDelay: shown ? `${delay}ms` : "0ms",
       }}

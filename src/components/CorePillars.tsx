@@ -61,10 +61,10 @@ export function CorePillars() {
           {PILLARS.map((pillar, i) => {
             const Icon = pillar.icon;
             return (
-              <Reveal key={pillar.n} delay={i * 90}>
-                <div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-[2.2rem] glass-strong bg-carbon-deep/85 border border-border/40 p-8 sm:p-10 transition-all duration-500 hover:border-volt/60 hover:shadow-[0_20px_50px_-20px_rgba(255,222,71,0.2)] hover:-translate-y-1.5">
+              <Reveal key={pillar.n} delay={i * 100} variant="scale">
+                <div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-[2.2rem] glass-strong bg-carbon-deep/85 border border-border/40 p-8 sm:p-10 card-hover-fx">
                   {/* Subtle corner highlight */}
-                  <div className="pointer-events-none absolute -bottom-16 -right-16 h-36 w-36 rounded-full bg-volt/10 blur-2xl transition-opacity group-hover:opacity-100 opacity-30" />
+                  <div className="pointer-events-none absolute -bottom-16 -right-16 h-36 w-36 rounded-full bg-volt/10 blur-2xl transition-opacity group-hover:opacity-100 opacity-30 animate-pulse-glow" />
 
                   <div>
                     {/* Header Row: Big Index & Icon */}
@@ -72,8 +72,8 @@ export function CorePillars() {
                       <span className="font-display text-5xl sm:text-6xl font-black leading-none text-muted-foreground/30 group-hover:text-volt/60 transition-colors duration-500">
                         {pillar.n}
                       </span>
-                      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-carbon border border-border/50 text-volt group-hover:bg-volt group-hover:text-carbon transition-colors duration-300">
-                        <Icon className="h-6 w-6" />
+                      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-carbon border border-border/50 text-volt group-hover:bg-volt group-hover:text-carbon transition-colors duration-300 shadow-md">
+                        <Icon className="h-6 w-6 icon-bounce" />
                       </div>
                     </div>
 

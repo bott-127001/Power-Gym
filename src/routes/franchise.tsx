@@ -558,15 +558,15 @@ function Franchise() {
             {SETS_US_APART.map((item, idx) => {
               const Icon = item.icon;
               return (
-                <Reveal key={item.n} delay={idx * 60}>
-                  <div className="group relative flex h-full flex-col justify-between rounded-[2rem] glass-strong bg-carbon-deep/85 border border-border/40 p-6 transition-all duration-500 hover:border-volt/60 hover:-translate-y-1.5">
+                <Reveal key={item.n} delay={idx * 60} variant="scale">
+                  <div className="group relative flex h-full flex-col justify-between rounded-[2rem] glass-strong bg-carbon-deep/85 border border-border/40 p-6 card-hover-fx">
                     <div>
                       <div className="flex items-center justify-between">
                         <span className="font-display text-4xl font-black text-muted-foreground/30 group-hover:text-volt/60 transition-colors">
                           {item.n}
                         </span>
-                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-volt/15 text-volt">
-                          <Icon className="h-5 w-5" />
+                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-volt/15 text-volt group-hover:bg-volt group-hover:text-carbon transition-colors duration-300 shadow-sm">
+                          <Icon className="h-5 w-5 icon-bounce" />
                         </div>
                       </div>
                       <h3 className="mt-5 font-display text-xl font-bold uppercase leading-tight text-white group-hover:text-volt transition-colors min-h-[3.25rem] flex items-start">
@@ -588,7 +588,7 @@ function Franchise() {
       <section className="relative overflow-hidden py-28 border-b border-border/20">
         <Atmosphere variant="a" />
         <div className="relative mx-auto max-w-6xl px-6">
-          <Reveal>
+          <Reveal variant="scale">
             <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt">
               The Business Model
             </p>
@@ -614,20 +614,21 @@ function Franchise() {
               {REVENUE_STREAMS.map((rs, idx) => {
                 const Icon = rs.icon;
                 return (
-                  <div
-                    key={rs.title}
-                    className="rounded-2xl glass bg-black/40 border border-border/30 p-6 flex flex-col justify-between"
-                  >
-                    <div>
-                      <Icon className="h-6 w-6 text-volt mb-4" />
-                      <h4 className="font-display text-lg font-bold text-white uppercase min-h-[2.75rem] flex items-start">
-                        {rs.title}
-                      </h4>
-                      <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                        {rs.copy}
-                      </p>
+                  <Reveal key={rs.title} delay={idx * 60} variant="scale">
+                    <div
+                      className="group rounded-2xl glass bg-black/40 border border-border/30 p-6 flex flex-col justify-between card-hover-fx h-full"
+                    >
+                      <div>
+                        <Icon className="h-6 w-6 text-volt mb-4 icon-bounce" />
+                        <h4 className="font-display text-lg font-bold text-white uppercase min-h-[2.75rem] flex items-start group-hover:text-volt transition-colors">
+                          {rs.title}
+                        </h4>
+                        <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                          {rs.copy}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  </Reveal>
                 );
               })}
             </div>

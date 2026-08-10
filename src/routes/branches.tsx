@@ -61,7 +61,7 @@ function Branches() {
             const isUpcoming = b.status === "upcoming";
 
             return (
-              <Reveal key={b.id} delay={i * 100}>
+              <Reveal key={b.id} delay={i * 100} variant={i % 2 === 0 ? "left" : "right"}>
                 <article
                   className={`grid gap-8 lg:grid-cols-2 lg:items-center ${
                     i % 2 ? "lg:[&>*:first-child]:order-2" : ""
@@ -69,7 +69,7 @@ function Branches() {
                 >
                   <div className="relative w-full max-w-xl mx-auto">
                     <div
-                      className={`overflow-hidden border border-border/40 transition-all duration-700 shadow-xl ${
+                      className={`overflow-hidden border border-border/40 transition-all duration-700 shadow-xl card-hover-fx ${
                         i % 2 ? "rounded-[1rem_3rem_1rem_3rem]" : "rounded-[3rem_1rem_3rem_1rem]"
                       }`}
                     >
@@ -80,13 +80,13 @@ function Branches() {
                       />
                     </div>
                     {isUpcoming && (
-                      <span className="absolute left-6 top-6 rounded-full glass-strong border border-volt/60 bg-carbon-deep/60 backdrop-blur-md px-4 py-2 text-[0.62rem] font-bold uppercase tracking-[0.24em] text-volt shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                      <span className="absolute left-6 top-6 rounded-full glass-strong border border-volt/60 bg-carbon-deep/60 backdrop-blur-md px-4 py-2 text-[0.62rem] font-bold uppercase tracking-[0.24em] text-volt shadow-[0_4px_12px_rgba(0,0,0,0.5)] animate-pulse">
                         Upcoming Club
                       </span>
                     )}
                   </div>
 
-                  <div className="min-w-0 p-8 sm:p-9 metal clip-notch bg-gradient-to-br from-[#181818] via-[#0d0d0d] to-[#141414] border border-border/60 shadow-[0_20px_50px_rgba(0,0,0,0.85)] transition-all duration-300">
+                  <div className="min-w-0 p-8 sm:p-9 metal clip-notch bg-gradient-to-br from-[#181818] via-[#0d0d0d] to-[#141414] border border-border/60 shadow-[0_20px_50px_rgba(0,0,0,0.85)] card-hover-fx">
                     <div>
                       <div className="flex items-center gap-2">
                         <p className="text-[0.62rem] uppercase tracking-[0.3em] text-volt">{b.city}</p>
@@ -96,7 +96,7 @@ function Branches() {
                           </span>
                         )}
                       </div>
-                      <h2 className="mt-3 font-display text-5xl sm:text-6xl leading-none">
+                      <h2 className="mt-3 font-display text-5xl sm:text-6xl leading-none group-hover:text-volt transition-colors">
                         {b.name.toUpperCase()}
                       </h2>
                       <p className="mt-3 text-sm leading-relaxed text-muted-foreground flex items-center gap-1.5 flex-wrap">

@@ -95,7 +95,7 @@ export function BeyondWorkout() {
                 >
                   {/* Left Column (Card on Even, Empty on Odd) */}
                   {isLeft ? (
-                    <Reveal delay={idx * 80}>
+                    <Reveal delay={idx * 80} variant="left">
                       <div className="flex justify-end">
                         <JourneyCard stage={stage} isLeft={true} Icon={Icon} />
                       </div>
@@ -106,14 +106,14 @@ export function BeyondWorkout() {
 
                   {/* Center Node Pin */}
                   <div className="relative flex items-center justify-center">
-                    <div className="grid h-11 w-11 place-items-center rounded-full bg-[#0d0d0d] border-2 border-volt text-xs font-display font-black text-volt shadow-[0_0_18px_rgba(255,222,71,0.5)] z-20 transition-transform duration-300 hover:scale-110">
+                    <div className="grid h-11 w-11 place-items-center rounded-full bg-[#0d0d0d] border-2 border-volt text-xs font-display font-black text-volt shadow-[0_0_18px_rgba(255,222,71,0.5)] z-20 transition-transform duration-300 hover:scale-115">
                       {stage.num}
                     </div>
                   </div>
 
                   {/* Right Column (Card on Odd, Empty on Even) */}
                   {!isLeft ? (
-                    <Reveal delay={idx * 80}>
+                    <Reveal delay={idx * 80} variant="right">
                       <div className="flex justify-start">
                         <JourneyCard stage={stage} isLeft={false} Icon={Icon} />
                       </div>
@@ -133,21 +133,21 @@ export function BeyondWorkout() {
               return (
                 <div className="relative pt-6 flex flex-col items-center">
                   {/* Culmination Node */}
-                  <div className="mb-8 grid h-12 w-12 place-items-center rounded-full bg-volt text-carbon shadow-[0_0_25px_rgba(255,222,71,0.8)] z-20">
+                  <div className="mb-8 grid h-12 w-12 place-items-center rounded-full bg-volt text-carbon shadow-[0_0_25px_rgba(255,222,71,0.8)] z-20 animate-pulse-glow">
                     <SummitIcon className="h-6 w-6" />
                   </div>
 
-                  <Reveal delay={300}>
-                    <div className="group relative w-full max-w-2xl overflow-hidden rounded-[2.5rem] glass-strong bg-[#121212]/95 border-2 border-volt/60 p-8 lg:p-11 text-center shadow-[0_25px_70px_-15px_rgba(255,222,71,0.2)] transition-all duration-500 hover:border-volt hover:scale-[1.01]">
+                  <Reveal delay={200} variant="scale">
+                    <div className="group relative w-full max-w-2xl overflow-hidden rounded-[2.5rem] glass-strong bg-linear-to-b from-[#181818] via-[#0f0f0f] to-[#121212] border-2 border-volt/50 p-8 sm:p-12 text-center card-hover-fx">
                       {/* Top Ambient Glow */}
-                      <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-48 w-48 rounded-full bg-volt/20 blur-3xl" />
+                      <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-44 w-44 rounded-full bg-volt/15 blur-3xl animate-pulse-glow" />
 
-                      <div className="inline-flex items-center gap-2 rounded-full bg-volt px-4 py-1 text-[0.65rem] font-bold uppercase tracking-[0.26em] text-carbon">
-                        <Sparkles className="h-3.5 w-3.5" />
-                        Stage 05 · The Summit of Self-Mastery
-                      </div>
+                      <span className="inline-flex items-center gap-2 rounded-full bg-volt/15 border border-volt/40 px-4 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.26em] text-volt">
+                        <Sparkles className="h-3 w-3 animate-spin" style={{ animationDuration: "5s" }} />
+                        {summitStage.category}
+                      </span>
 
-                      <h3 className="mt-5 font-display text-3xl sm:text-5xl uppercase font-black leading-none tracking-tight text-white">
+                      <h3 className="mt-5 font-display text-3xl sm:text-5xl uppercase font-black leading-none tracking-tight text-white group-hover:text-volt transition-colors">
                         {summitStage.title}
                       </h3>
 
@@ -180,12 +180,12 @@ export function BeyondWorkout() {
               const isLast = idx === STAGES.length - 1;
 
               return (
-                <Reveal key={stage.num} delay={idx * 60}>
+                <Reveal key={stage.num} delay={idx * 60} variant="scale">
                   <div className="relative group">
                     {/* Glowing Circular Node Pin */}
                     <div className="absolute -left-7 sm:-left-10 top-7 -translate-x-1/2 flex items-center justify-center">
                       <div
-                        className={`grid h-7 w-7 place-items-center rounded-full text-[0.6rem] font-display font-black ${
+                        className={`grid h-7 w-7 place-items-center rounded-full text-[0.6rem] font-display font-black transition-transform duration-300 group-hover:scale-110 ${
                           isLast
                             ? "bg-volt text-carbon shadow-[0_0_15px_rgba(255,222,71,0.8)]"
                             : "bg-[#0c0c0c] border-2 border-volt text-volt shadow-[0_0_10px_rgba(255,222,71,0.4)]"
@@ -197,7 +197,7 @@ export function BeyondWorkout() {
 
                     {/* Smoked Glass Card */}
                     <div
-                      className={`relative overflow-hidden rounded-[2rem] p-6 sm:p-7 transition-all duration-300 ${
+                      className={`relative overflow-hidden rounded-[2rem] p-6 sm:p-7 card-hover-fx ${
                         isLast
                           ? "glass-strong bg-[#121212]/95 border-2 border-volt/60 shadow-[0_15px_40px_rgba(255,222,71,0.2)]"
                           : "glass-strong bg-[#121212]/85 border border-white/10 hover:border-volt/40"
@@ -210,7 +210,7 @@ export function BeyondWorkout() {
 
                       <div className="flex items-center gap-3">
                         <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl glass border border-volt/35 text-volt">
-                          <Icon className="h-5 w-5" />
+                          <Icon className="h-5 w-5 icon-bounce" />
                         </div>
                         <div>
                           <p className="text-[0.58rem] font-bold uppercase tracking-[0.22em] text-volt">
@@ -252,7 +252,7 @@ function JourneyCard({
   Icon: typeof Target;
 }) {
   return (
-    <div className="group relative w-full max-w-[420px] overflow-hidden rounded-[2.2rem] glass-strong bg-[#121212]/90 border border-white/10 p-7 lg:p-8 transition-all duration-500 hover:border-volt/60 hover:shadow-[0_20px_50px_-15px_rgba(255,222,71,0.2)] hover:-translate-y-1">
+    <div className="group relative w-full max-w-[420px] overflow-hidden rounded-[2.2rem] glass-strong bg-[#121212]/90 border border-white/10 p-7 lg:p-8 card-hover-fx">
       {/* Large Editorial Watermark Number */}
       <span
         className={`pointer-events-none absolute font-display text-6xl font-black text-neutral-800/30 group-hover:text-volt/20 transition-colors duration-500 select-none ${
@@ -263,13 +263,13 @@ function JourneyCard({
       </span>
 
       {/* Ambient Top Glow on Hover */}
-      <div className="pointer-events-none absolute -top-16 -left-16 h-32 w-32 rounded-full bg-volt/10 blur-2xl transition-opacity group-hover:opacity-100 opacity-20" />
+      <div className="pointer-events-none absolute -top-16 -left-16 h-32 w-32 rounded-full bg-volt/10 blur-2xl transition-opacity group-hover:opacity-100 opacity-20 animate-pulse-glow" />
 
       <div>
         {/* Top Header: Icon & Category */}
         <div className="flex items-center justify-between">
-          <div className="grid h-11 w-11 place-items-center rounded-2xl glass border border-volt/35 text-volt group-hover:bg-volt group-hover:text-carbon group-hover:border-volt transition-all duration-300">
-            <Icon className="h-5 w-5" />
+          <div className="grid h-11 w-11 place-items-center rounded-2xl glass border border-volt/35 text-volt group-hover:bg-volt group-hover:text-carbon group-hover:border-volt transition-all duration-300 shadow-sm">
+            <Icon className="h-5 w-5 icon-bounce" />
           </div>
           <span className="rounded-full bg-[#0a0a0a] px-3 py-1 text-[0.6rem] font-bold uppercase tracking-[0.22em] text-neutral-400 border border-border/50 group-hover:text-volt group-hover:border-volt/40 transition-colors">
             Stage {stage.num}

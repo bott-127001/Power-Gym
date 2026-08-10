@@ -55,16 +55,16 @@ export function PowerUpAdvantage() {
           {ADVANTAGES.map((adv, i) => {
             const Icon = adv.icon;
             return (
-              <Reveal key={adv.title} delay={i * 100}>
-                <div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-[2rem] glass-strong bg-carbon-deep/85 border border-border/40 p-8 transition-all duration-500 hover:border-volt/50 hover:shadow-[0_20px_50px_-20px_rgba(255,222,71,0.25)] hover:-translate-y-1.5">
+              <Reveal key={adv.title} delay={i * 120} variant="scale">
+                <div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-[2rem] glass-strong bg-carbon-deep/85 border border-border/40 p-8 card-hover-fx">
                   {/* Subtle top glow */}
-                  <div className="pointer-events-none absolute -top-16 -right-16 h-32 w-32 rounded-full bg-volt/10 blur-2xl transition-opacity group-hover:opacity-100 opacity-40" />
+                  <div className="pointer-events-none absolute -top-16 -right-16 h-32 w-32 rounded-full bg-volt/10 blur-2xl transition-opacity group-hover:opacity-100 opacity-40 animate-pulse-glow" />
 
                   <div>
                     {/* Top Row: Icon & Number Tag */}
                     <div className="flex items-center justify-between">
-                      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-carbon border border-border/60 text-volt group-hover:bg-volt group-hover:text-carbon group-hover:border-volt transition-all duration-300">
-                        <Icon className="h-6 w-6" />
+                      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-carbon border border-border/60 text-volt group-hover:bg-volt group-hover:text-carbon group-hover:border-volt transition-all duration-300 shadow-md">
+                        <Icon className="h-6 w-6 icon-bounce" />
                       </div>
                       <span className="font-display text-2xl font-bold text-muted-foreground/40 group-hover:text-volt transition-colors">
                         {adv.tag}
@@ -81,7 +81,6 @@ export function PowerUpAdvantage() {
                       {adv.copy}
                     </p>
                   </div>
-
                 </div>
               </Reveal>
             );
