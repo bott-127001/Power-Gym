@@ -319,11 +319,8 @@ function Contact() {
           <div className="space-y-6">
             <Reveal delay={100} variant="right">
               <div className="metal clip-angled p-9 card-hover-fx">
-                <p className="text-[0.62rem] uppercase tracking-[0.3em] text-volt">
-                  Our clubs
-                </p>
                 <div
-                  className="mt-5 block font-display text-5xl leading-none uppercase text-foreground"
+                  className="font-display text-5xl leading-none uppercase text-foreground"
                 >
                   Contact Details
                 </div>
