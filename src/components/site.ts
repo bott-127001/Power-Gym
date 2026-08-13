@@ -56,8 +56,8 @@ export const BRANCHES = [
     address: "Baner - Sus, Pune, Maharashtra",
     shortAddress: "Baner - Sus",
     maps: "https://maps.google.com/?q=Power+Up+Fitness+Baner+Sus+Pune",
-    image: "/logo.jpeg",
-    images: ["/logo.jpeg"],
+    image: facility,
+    images: [facility],
   },
 ] as const;
 
