@@ -11,7 +11,7 @@ import {
   type BranchId,
 } from "../components/site";
 import { recordEnquiryFn } from "../lib/enquiry";
-import { AlertCircle, CheckCircle2, MessageCircle, Send } from "lucide-react";
+import { AlertCircle, CheckCircle2, MessageCircle, Send, Mail } from "lucide-react";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -89,20 +89,51 @@ function Contact() {
         },
       });
 
-      if (!res?.success || !res?.whatsappUrl) {
+      if (!res?.success) {
         throw new Error("Could not record enquiry in spreadsheet.");
       }
 
       setSubmissionId(res.submissionId);
       setSubmitting(false);
 
-      // 2. Open WhatsApp with prefilled enquiry details
-      window.open(res.whatsappUrl, "_blank", "noopener,noreferrer");
+      // 2. Open Gmail compose window to pisal.rohan@gmail.com with details
+      const branchName = BRANCHES.find((b) => b.id === branchId)?.name || branchId;
+      const subject = encodeURIComponent(
+        `New PowerUp Fitness Enquiry: ${name.trim()} (${branchName})`,
+      );
+      const emailLines = [
+        "Hello PowerUp Team,",
+        "",
+        "A new fitness enquiry has been submitted through the PowerUp website contact form:",
+        "",
+        `• Name: ${name.trim()}`,
+        `• Phone: +91 ${phone.trim()}`,
+        `• Preferred Branch: Power Up ${branchName}`,
+        `• Interested In: ${goal.trim()}`,
+      ];
+
+      if (message.trim()) {
+        emailLines.push(`• Message: ${message.trim()}`);
+      }
+
+      if (res?.submissionId) {
+        emailLines.push(`• Reference ID: ${res.submissionId}`);
+      }
+
+      emailLines.push("");
+      emailLines.push("PowerUp Fitness Concierge System");
+
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=pisal.rohan@gmail.com&su=${subject}&body=${encodeURIComponent(
+        emailLines.join("\n"),
+      )}`;
+
+      // Open Gmail in a new tab
+      window.open(gmailUrl, "_blank", "noopener,noreferrer");
     } catch (err: any) {
       console.error("Contact submission error:", err);
       setSubmitting(false);
       setServerError(
-        "We couldn't submit your enquiry right now. Please try again or connect directly on WhatsApp.",
+        "We couldn't submit your enquiry right now. Please email directly to pisal.rohan@gmail.com.",
       );
     }
   };
@@ -121,8 +152,8 @@ function Contact() {
           </Reveal>
           <Reveal delay={120}>
             <p className="mt-8 max-w-lg text-lg text-muted-foreground">
-              Fill out the form below to record your enquiry and start a conversation on WhatsApp
-              with your nearest club.
+              Fill out the form below to record your enquiry and start a conversation over email
+              with our fitness team.
             </p>
           </Reveal>
         </div>
@@ -143,13 +174,11 @@ function Contact() {
                   <div className="flex-1">
                     <p>{serverError}</p>
                     <a
-                      href={getBranchDirectWhatsAppUrl(branchId)}
-                      target="_blank"
-                      rel="noreferrer"
+                      href="mailto:pisal.rohan@gmail.com"
                       className="mt-2 inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-volt hover:underline text-[0.7rem]"
                     >
-                      <MessageCircle className="h-3.5 w-3.5" />
-                      Chat directly on WhatsApp →
+                      <Mail className="h-3.5 w-3.5" />
+                      Email directly to pisal.rohan@gmail.com →
                     </a>
                   </div>
                 </div>
@@ -165,7 +194,7 @@ function Contact() {
                       <span className="font-mono text-foreground font-bold">{submissionId}</span>
                     </p>
                     <p className="mt-1 text-muted-foreground">
-                      Your prefilled WhatsApp message has opened. Our coaches will assist you
+                      Your prefilled email has opened in Gmail. Our coaches will assist you
                       promptly.
                     </p>
                   </div>
@@ -263,7 +292,7 @@ function Contact() {
                 </div>
               </div>
 
-              <button
+               <button
                 type="submit"
                 disabled={submitting}
                 className="group relative mt-6 w-full overflow-hidden rounded-full bg-volt px-8 py-4 text-sm font-bold uppercase tracking-[0.22em] text-carbon transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_60px_-16px_var(--volt)] disabled:opacity-75 cursor-pointer active:scale-98"
@@ -271,10 +300,10 @@ function Contact() {
                 <span className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
                 <span className="relative flex items-center justify-center gap-2">
                   {submitting ? (
-                    <span>Saving & Opening WhatsApp...</span>
+                    <span>Submitting...</span>
                   ) : (
                     <>
-                      <span>Submit & Continue to WhatsApp</span>
+                      <span>Submit</span>
                       <Send className="h-4 w-4 icon-bounce" />
                     </>
                   )}
@@ -282,7 +311,7 @@ function Contact() {
               </button>
 
               <p className="mt-3 text-center text-[0.65rem] text-muted-foreground/80">
-                Records your enquiry in our verified schedule and pre-fills your WhatsApp chat.
+                Records your enquiry in our verified schedule and pre-fills your email.
               </p>
             </form>
           </Reveal>
