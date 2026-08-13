@@ -89,9 +89,7 @@ export function ImageSlideshow({ images, alt, className = "h-80 w-full" }: Image
               key={idx}
               src={img}
               alt={hasMultiple ? `${alt} slide ${idx + 1}` : alt}
-              className={`h-full w-full shrink-0 animate-fade-in ${
-                isLogo ? "object-contain p-8 sm:p-12 bg-carbon-deep" : "object-cover"
-              }`}
+              className="h-full w-full shrink-0 animate-fade-in object-cover"
               loading="lazy"
             />
           );
