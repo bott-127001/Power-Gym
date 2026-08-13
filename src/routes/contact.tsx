@@ -320,14 +320,13 @@ function Contact() {
             <Reveal delay={100} variant="right">
               <div className="metal clip-angled p-9 card-hover-fx">
                 <p className="text-[0.62rem] uppercase tracking-[0.3em] text-volt">
-                  Contact details
+                  Our clubs
                 </p>
-                <a
-                  href={`tel:${PHONE}`}
-                  className="mt-5 block font-display text-5xl leading-none transition-colors hover:text-volt"
+                <div
+                  className="mt-5 block font-display text-5xl leading-none uppercase text-foreground"
                 >
-                  +91 84465 88173
-                </a>
+                  Contact Details
+                </div>
                 <div className="mt-8 space-y-6 text-sm text-muted-foreground">
                   {BRANCHES.map((b) => (
                     <div key={b.id} className="border-b border-border/20 pb-4 last:border-b-0 last:pb-0">
