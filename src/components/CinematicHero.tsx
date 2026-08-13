@@ -52,8 +52,33 @@ export function CinematicHero() {
     if (!ctx) return;
 
     const clampedIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, frameIndex));
-    const img = imagesRef.current[clampedIndex];
-    if (!img || !img.complete || img.naturalWidth === 0) return;
+    
+    // Find the closest loaded image to avoid animation cracking/freezing
+    let img = imagesRef.current[clampedIndex];
+    let actualIndex = clampedIndex;
+
+    if (!img || !img.complete || img.naturalWidth === 0) {
+      let dist = 1;
+      let found = false;
+      while (dist < TOTAL_FRAMES) {
+        const left = clampedIndex - dist;
+        const right = clampedIndex + dist;
+        if (left >= 0 && imagesRef.current[left]?.complete && imagesRef.current[left]?.naturalWidth > 0) {
+          img = imagesRef.current[left];
+          actualIndex = left;
+          found = true;
+          break;
+        }
+        if (right < TOTAL_FRAMES && imagesRef.current[right]?.complete && imagesRef.current[right]?.naturalWidth > 0) {
+          img = imagesRef.current[right];
+          actualIndex = right;
+          found = true;
+          break;
+        }
+        dist++;
+      }
+      if (!found) return; // Wait for at least one frame to load
+    }
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const width = canvas.clientWidth || window.innerWidth;
@@ -92,7 +117,7 @@ export function CinematicHero() {
     ctx.drawImage(img, drawX, drawY, drawW, drawH);
     ctx.restore();
 
-    lastDrawnFrameRef.current = clampedIndex;
+    lastDrawnFrameRef.current = actualIndex;
   }, []);
 
   // Progressive frame loading optimized for desktop and mobile
@@ -126,21 +151,34 @@ export function CinematicHero() {
       };
     }
 
-    // 3. Load remaining frames sequentially to preserve bandwidth and memory
+    // 3. Load remaining frames sequentially using controlled concurrent queue
     const loadRemaining = () => {
-      for (let i = 26; i < TOTAL_FRAMES; i++) {
-        if (!isMounted) return;
+      let nextIndex = 26;
+
+      const loadNext = () => {
+        if (!isMounted || nextIndex >= TOTAL_FRAMES) return;
+
+        const currentIdx = nextIndex++;
         const img = new Image();
-        img.src = getFramePath(i);
+        img.src = getFramePath(currentIdx);
         img.onload = () => {
           if (!isMounted) return;
-          imagesRef.current[i] = img;
+          imagesRef.current[currentIdx] = img;
           loaded++;
           setLoadedCount(loaded);
-          if (currentFrameRef.current === i) {
-            renderFrame(i);
+          if (currentFrameRef.current === currentIdx) {
+            renderFrame(currentIdx);
           }
+          loadNext();
         };
+        img.onerror = () => {
+          loadNext();
+        };
+      };
+
+      // Start 4 concurrent loader streams to utilize connection pool efficiently
+      for (let c = 0; c < 4; c++) {
+        loadNext();
       }
     };
 
@@ -212,7 +250,6 @@ export function CinematicHero() {
         frameSequence,
         {
           frame: TOTAL_FRAMES - 1,
-          snap: "frame",
           duration: 0.76,
           ease: "none",
           onUpdate: () => {
