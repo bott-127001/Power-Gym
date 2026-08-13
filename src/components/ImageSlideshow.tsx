@@ -82,15 +82,20 @@ export function ImageSlideshow({ images, alt, className = "h-80 w-full" }: Image
         className="flex h-full w-full transition-transform duration-700 ease-out"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
-        {images.map((img, idx) => (
-          <img
-            key={idx}
-            src={img}
-            alt={hasMultiple ? `${alt} slide ${idx + 1}` : alt}
-            className="h-full w-full object-cover shrink-0 animate-fade-in"
-            loading="lazy"
-          />
-        ))}
+        {images.map((img, idx) => {
+          const isLogo = img.includes("logo.jpeg");
+          return (
+            <img
+              key={idx}
+              src={img}
+              alt={hasMultiple ? `${alt} slide ${idx + 1}` : alt}
+              className={`h-full w-full shrink-0 animate-fade-in ${
+                isLogo ? "object-contain p-8 sm:p-12 bg-carbon-deep" : "object-cover"
+              }`}
+              loading="lazy"
+            />
+          );
+        })}
       </div>
 
       {/* Navigation Arrows */}
