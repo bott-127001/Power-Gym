@@ -27,7 +27,7 @@ export const BRANCHES = [
     shortAddress: "Skyi Manas",
     maps: "https://maps.google.com/?q=Power+Up+Fitness+Bhukum+Pune",
     image: "/Bhukum.jpg",
-    images: ["/Bhukum.jpg", facility, hero, "/Mahalunge.jpg"],
+    images: ["/Bhukum.jpg", "/Bhukum1.jpg", "/Bhukum2.jpg", "/Bhukum3.jpg"],
   },
   {
     id: "mahalunge",
@@ -42,7 +42,7 @@ export const BRANCHES = [
     shortAddress: "Near VTP Circle",
     maps: "https://maps.google.com/?q=Power+Up+Fitness+Mahalunge+Pune",
     image: "/Mahalunge.jpg",
-    images: ["/Mahalunge.jpg", facility, hero, "/Bhukum.jpg"],
+    images: ["/Mahalunge.jpg", "/Mahalunge1.jpg", "/Mahalunge2.jpg", "/Mahalunge3.jpg"],
   },
   {
     id: "baner-sus",
@@ -56,8 +56,8 @@ export const BRANCHES = [
     address: "Baner - Sus, Pune, Maharashtra",
     shortAddress: "Baner - Sus",
     maps: "https://maps.google.com/?q=Power+Up+Fitness+Baner+Sus+Pune",
-    image: facility,
-    images: [facility, hero, "/Bhukum.jpg", "/Mahalunge.jpg"],
+    image: "/logo.jpeg",
+    images: ["/logo.jpeg"],
   },
 ] as const;
 
