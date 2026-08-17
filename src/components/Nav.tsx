@@ -23,7 +23,7 @@ export function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6 sm:pt-4 [padding-top:max(0.75rem,env(safe-area-inset-top))]">
       <nav
-        className={`mx-auto flex max-w-6xl items-center gap-3 sm:gap-4 rounded-full px-3.5 py-2 sm:px-5 sm:py-3 transition-all duration-500 ${
+        className={`mx-auto flex max-w-6xl items-center gap-3 sm:gap-4 rounded-full px-3.5 py-1 sm:px-5 sm:py-1.5 transition-all duration-500 ${
           scrolled
             ? "glass-strong bg-carbon-deep/75 shadow-[0_20px_50px_-30px_black]"
             : "border border-transparent"
@@ -33,7 +33,7 @@ export function Nav() {
           <img
             src="/logo.jpeg"
             alt="Power Up Fitness"
-            className="h-9 sm:h-11 w-auto max-w-[140px] sm:max-w-[170px] rounded-xl object-contain shrink-0 transition-transform duration-300 group-hover:scale-105"
+            className="h-12 sm:h-15 w-auto max-w-[180px] sm:max-w-[220px] rounded-xl object-contain shrink-0 transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
 

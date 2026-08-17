@@ -531,7 +531,7 @@ export function CinematicHero() {
               POWER<span className="text-volt-gradient">UP</span> FITNESS
             </h2>
             <p className="mt-2 sm:mt-3 text-xs sm:text-sm md:text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
-              Pune&apos;s premier biomechanics and transformation clubs in Bhukum & Mahalunge.
+              Powerup Fitness — Premium Fitness Gym. Proven Transformation. Personalized Experience.
             </p>
           </div>
         </div>

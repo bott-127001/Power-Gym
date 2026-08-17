@@ -243,8 +243,7 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
               <span className="text-volt-gradient">TRANSFORMATION</span>
             </h2>
             <p className="mt-2 text-sm sm:text-base text-muted-foreground leading-relaxed">
-              Tell us what you&apos;re looking for and our team will help you choose the right
-              PowerUp experience.
+              Powerup Fitness — Premium Fitness Gym. Proven Transformation. Personalized Experience.
             </p>
           </div>
 

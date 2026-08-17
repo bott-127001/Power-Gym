@@ -31,6 +31,7 @@ import {
   Sliders,
   DollarSign,
   ChevronRight,
+  ChevronDown,
   Compass,
   Calendar,
   Layers,
@@ -185,6 +186,29 @@ const SUPPORT_AFTER = [
   "Ongoing brand, marketing & tech stack updates",
 ];
 
+const FAQ_ITEMS = [
+  {
+    question: "Why should I choose Powerup Fitness over other gym brands?",
+    answer: "Powerup Fitness stands out with its modern, tech-enabled fitness ecosystem, premium infrastructure, and strong brand positioning. We focus on delivering a superior member experience through smart equipment, optimized layouts, and data-driven operations — helping you attract and retain high-value customers while maximizing profitability."
+  },
+  {
+    question: "What support will I receive before and after launch?",
+    answer: "Powerup Fitness offers complete end-to-end support. Before launch, we assist with location selection, gym design, equipment planning, and setup. Post-launch, we provide marketing support, staff training, operational guidance, and continuous performance monitoring to ensure your business runs smoothly and grows consistently."
+  },
+  {
+    question: "How long does it take to break even?",
+    answer: "The break-even period typically ranges between 12 to 18 months, depending on factors like location, investment size, and local market demand. With Powerup Fitness's structured systems and marketing support, partners are well-positioned to achieve faster returns."
+  },
+  {
+    question: "Do I need prior fitness industry experience?",
+    answer: "No prior experience is required. Powerup Fitness provides comprehensive training and operational support, making it easy for entrepreneurs from any background to successfully run a gym business."
+  },
+  {
+    question: "How does Powerup Fitness help in lead generation?",
+    answer: "Powerup Fitness drives leads through a mix of digital marketing, local promotions, social media campaigns, and brand-driven outreach strategies. We also provide guidance on converting leads into memberships, ensuring a steady flow of customers and consistent revenue growth."
+  }
+];
+
 const fieldClass =
   "w-full rounded-2xl border border-input bg-carbon-deep/80 px-5 py-3.5 text-sm outline-hidden transition-all duration-300 placeholder:text-muted-foreground/70 focus:border-volt/60 focus:ring-2 focus:ring-volt/20";
 
@@ -199,6 +223,7 @@ function Franchise() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   const validatePhone = (value: string) => {
     const cleaned = value.replace(/[\s\-()+]/g, "").replace(/^91|^0/, "");
@@ -817,6 +842,64 @@ function Franchise() {
 
       {/* ───────────── 9. HOW IT WORKS / ROADMAP (PDF SLIDE 12) ───────────── */}
       <FranchisePathRoadmap />
+
+      {/* ───────────── FAQ SECTION (FREQUENTLY ASKED QUESTIONS) ───────────── */}
+      <section className="relative overflow-hidden py-28 border-b border-border/20">
+        <Atmosphere variant="a" />
+        <div className="relative mx-auto max-w-4xl px-6">
+          <Reveal>
+            <div className="text-center mb-16">
+              <p className="text-lg sm:text-xl text-[20px] font-bold uppercase tracking-[0.2em] text-volt">
+                Common Inquiries
+              </p>
+              <h2 className="mt-3 font-display text-[clamp(2.2rem,6vw,4.5rem)] leading-none text-white uppercase tracking-wider">
+                Frequently Asked Questions
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="space-y-4">
+            {FAQ_ITEMS.map((item, idx) => {
+              const isOpen = openFaqIndex === idx;
+              return (
+                <Reveal key={idx} delay={idx * 50}>
+                  <div className="rounded-2xl border border-border/30 bg-carbon-light/30 overflow-hidden transition-all duration-300">
+                    <button
+                      onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
+                      className="flex w-full items-center justify-between bg-carbon-light px-6 py-5 text-left text-white transition-colors duration-300 hover:bg-carbon-light/80 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3.5">
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-volt text-carbon font-bold text-base select-none">
+                          {isOpen ? "−" : "+"}
+                        </span>
+                        <span className="font-semibold text-base sm:text-lg tracking-wide">
+                          {item.question}
+                        </span>
+                      </div>
+                      <ChevronDown
+                        className={`h-5 w-5 text-neutral-400 shrink-0 transition-transform duration-300 ${
+                          isOpen ? "rotate-180 text-volt" : ""
+                        }`}
+                      />
+                    </button>
+                    <div
+                      className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+                        isOpen ? "grid-rows-[1fr] opacity-100 border-t border-border/20" : "grid-rows-[0fr] opacity-0"
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="p-6 text-sm sm:text-base leading-relaxed text-neutral-300 bg-carbon-deep/50">
+                          {item.answer}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* ───────────── 10. FRANCHISE ENQUIRY APPLICATION & CLOSING (PDF SLIDE 13) ───────────── */}
       <section id="enquire-franchise" className="relative overflow-hidden py-28">
