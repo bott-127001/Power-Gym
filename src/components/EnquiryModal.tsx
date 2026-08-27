@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { BRANCHES, ENQUIRY_GOALS, type BranchId } from "./site";
 import { recordEnquiryFn } from "../lib/enquiry";
 import { X, Sparkles, Mail, CheckCircle2, AlertCircle, ChevronDown } from "lucide-react";
+import { DumbbellSpinner } from "./GymLoaders";
 
 interface EnquiryModalProps {
   isOpen: boolean;
@@ -474,7 +475,10 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
                     <span>Submitted!</span>
                   </>
                 ) : submitting ? (
-                  <span>Submitting...</span>
+                  <>
+                    <DumbbellSpinner className="h-5 w-5" variant="carbon" />
+                    <span>Submitting...</span>
+                  </>
                 ) : (
                   <span>Submit</span>
                 )}

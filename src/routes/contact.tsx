@@ -20,7 +20,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Book a free trial at Power Up Fitness Bhukum or Mahalunge. Call +91 84465 88173 or send us your goal and we'll be in touch.",
+          "Book a free trial at Power Up Fitness Bhukum or Mahalunge. Call +91 83088 88008 or send us your goal and we'll be in touch.",
       },
       { property: "og:title", content: "Contact & Free Trial — Power Up Fitness Pune" },
       {

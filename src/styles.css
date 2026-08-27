@@ -459,3 +459,35 @@ span.text-neutral-500:not(.uppercase) {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 222, 71, 0.6);
 }
+
+/* ───────────── GYM-THEMED LOADER ANIMATIONS ───────────── */
+@keyframes barbellLift {
+  0%, 100% {
+    transform: translateY(14px) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(1.5deg);
+  }
+}
+
+@keyframes barbellShadow {
+  0%, 100% {
+    transform: scaleX(1.15);
+    opacity: 0.35;
+    filter: blur(2px);
+  }
+  50% {
+    transform: scaleX(0.7);
+    opacity: 0.12;
+    filter: blur(4px);
+  }
+}
+
+.animate-barbell-lift {
+  animation: barbellLift 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-barbell-shadow {
+  animation: barbellShadow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+

@@ -1,4 +1,4 @@
-export const PHONE = "+918446588173";
+export const PHONE = "+918308888008";
 export const WHATSAPP = "https://wa.me/918446588173";
 
 export const NAV = [
@@ -20,7 +20,7 @@ export const BRANCHES = [
     fullName: "Bhukum Club",
     city: "Pune",
     status: "active" as const,
-    phone: "+918446588173",
+    phone: "+918308888008",
     whatsappNumber: "918446588173",
     occupancy: "MODERATE",
     address: "Skyi Manas, Lake City, Bhukum, Maharashtra 412115",
@@ -35,7 +35,7 @@ export const BRANCHES = [
     fullName: "Mahalunge Club",
     city: "Pune",
     status: "active" as const,
-    phone: "+918446588174",
+    phone: "+918308888008",
     whatsappNumber: "918446588174",
     occupancy: "LOW",
     address: "21, Opp. Godrej Green Cove, near VTP Circle, Mahalunge, Pune",
@@ -50,8 +50,8 @@ export const BRANCHES = [
     fullName: "Baner-Sus Club",
     city: "Pune",
     status: "upcoming" as const,
-    phone: "+919923899499",
-    whatsappNumber: "919923899499",
+    phone: "+918308888008",
+    whatsappNumber: "918446588164",
     occupancy: "COMING SOON",
     address: "Baner - Sus, Pune, Maharashtra",
     shortAddress: "Baner - Sus",
