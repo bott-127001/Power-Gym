@@ -165,7 +165,8 @@ function About() {
               <img
                 src={facility}
                 alt="Power Up Fitness premium training floor"
-                loading="lazy"
+                loading="eager"
+                decoding="async"
                 width={1600}
                 height={1104}
                 className="h-[30rem] w-full object-cover brightness-90 transition-transform duration-700 hover:scale-105"

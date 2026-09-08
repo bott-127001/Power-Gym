@@ -171,6 +171,25 @@
   border: 1px solid rgba(255, 222, 71, 0.3);
 }
 
+/* Mobile GPU optimization for glassmorphism */
+@media (max-width: 768px) {
+  .glass {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: rgba(18, 18, 18, 0.85);
+  }
+  .glass-strong {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(12, 12, 12, 0.94);
+  }
+  .glass-volt {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: rgba(255, 222, 71, 0.12);
+  }
+}
+
 /* Geometric clip paths */
 .clip-hex {
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);

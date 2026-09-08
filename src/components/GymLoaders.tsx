@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 // Custom animated Barbell Loader for full screen transitions
 export function BarbellLoader({ 
   message = "WARMING UP...", 
-  subMessage = "PREPARING ELITE BIOMECHANICS..." 
+  subMessage = "PREPARING ELITE BIOMECHANICS...",
+  progress,
 }: { 
   message?: string;
   subMessage?: string;
+  progress?: number;
 }) {
   const [dots, setDots] = useState("");
 
@@ -87,6 +89,22 @@ export function BarbellLoader({
         <p className="mt-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
           {subMessage}
         </p>
+
+        {/* ───────────── PROGRESS BAR & PERCENTAGE ───────────── */}
+        {typeof progress === "number" && (
+          <div className="mt-6 w-64 sm:w-76">
+            <div className="flex justify-between items-center text-[0.68rem] font-mono font-bold tracking-[0.18em] text-volt mb-2">
+              <span>{progress >= 100 ? "ASSETS READY" : "PRE-LOADING"}</span>
+              <span className="text-white font-black">{progress}%</span>
+            </div>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-carbon border border-volt/30 shadow-inner">
+              <div 
+                className="h-full bg-linear-to-r from-volt/80 via-volt to-white transition-all duration-150 ease-out shadow-[0_0_12px_rgba(255,222,71,0.8)]"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

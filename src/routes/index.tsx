@@ -50,7 +50,7 @@ function Index() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsEnquiryOpen(true);
-    }, 1100);
+    }, 4000);
 
     const handleOpenEnquiry = () => setIsEnquiryOpen(true);
     window.addEventListener("open-enquiry-modal", handleOpenEnquiry);

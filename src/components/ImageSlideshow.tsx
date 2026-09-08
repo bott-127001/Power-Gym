@@ -92,7 +92,8 @@ export function ImageSlideshow({ images, alt, className = "h-80 w-full" }: Image
               className={`h-full w-full shrink-0 animate-fade-in ${
                 isLogo ? "object-contain p-8 sm:p-12 bg-carbon-deep" : "object-cover"
               }`}
-              loading="lazy"
+              loading="eager"
+              decoding="async"
             />
           );
         })}

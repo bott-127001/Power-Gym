@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PowerButton } from "./PowerButton";
@@ -12,6 +12,7 @@ if (typeof window !== "undefined") {
 const START_FRAME = 47;
 const END_FRAME = 240;
 const TOTAL_FRAMES = END_FRAME - START_FRAME + 1; // 194 frames (47 to 240)
+const BATCH_SIZE = 15;
 
 const getFramePath = (index: number) => {
   const frameNum = START_FRAME + Math.max(0, Math.min(TOTAL_FRAMES - 1, index));
@@ -40,11 +41,10 @@ export function CinematicHero() {
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const currentFrameRef = useRef<number>(0);
   const lastDrawnFrameRef = useRef<number>(-1);
-
-  const [, setLoadedCount] = useState(0);
-  const [, setInitialFrameReady] = useState(false);
+  const dimRef = useRef({ width: 0, height: 0, dpr: 1 });
 
   // Draw image on canvas maintaining object-fit: cover with retina sharpness and responsive aspect ratio
+  // Eliminates layout thrashing: uses cached dimensions from dimRef without reading DOM layout on scroll
   const renderFrame = useCallback((frameIndex: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -53,7 +53,7 @@ export function CinematicHero() {
 
     const clampedIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, frameIndex));
     
-    // Find the closest loaded image to avoid animation cracking/freezing
+    // Find loaded image or fallback to closest loaded frame
     let img = imagesRef.current[clampedIndex];
     let actualIndex = clampedIndex;
 
@@ -77,18 +77,11 @@ export function CinematicHero() {
         }
         dist++;
       }
-      if (!found) return; // Wait for at least one frame to load
+      if (!found || !img) return;
     }
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const width = canvas.clientWidth || window.innerWidth;
-    const height = canvas.clientHeight || window.innerHeight;
-
-    // Check if canvas resolution needs updating
-    if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-    }
+    const { width, height, dpr } = dimRef.current;
+    if (width === 0 || height === 0) return;
 
     ctx.save();
     ctx.scale(dpr, dpr);
@@ -120,72 +113,82 @@ export function CinematicHero() {
     lastDrawnFrameRef.current = actualIndex;
   }, []);
 
-  // Progressive frame loading optimized for desktop and mobile
+  const updateCanvasDimensions = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const isMobile = window.innerWidth < 768;
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+    const width = canvas.clientWidth || window.innerWidth;
+    const height = canvas.clientHeight || window.innerHeight;
+    dimRef.current = { width, height, dpr };
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    renderFrame(currentFrameRef.current);
+  }, [renderFrame]);
+
+  // Progressive frame loading in batches of 15 pictures
   useEffect(() => {
     imagesRef.current = new Array(TOTAL_FRAMES);
     let isMounted = true;
-    let loaded = 0;
 
-    // 1. Load initial frame (frame_0047.jpg) immediately for instant first render
-    const firstImg = new Image();
-    firstImg.src = getFramePath(0);
-    firstImg.onload = () => {
-      if (!isMounted) return;
-      imagesRef.current[0] = firstImg;
-      setInitialFrameReady(true);
-      renderFrame(0);
+    // Helper to load and decode a single frame
+    const loadFrame = (index: number): Promise<HTMLImageElement | null> => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = getFramePath(index);
+        const onDone = () => {
+          if (!isMounted) return resolve(null);
+          imagesRef.current[index] = img;
+          if (currentFrameRef.current === index) {
+            renderFrame(index);
+          }
+          resolve(img);
+        };
+        if (img.decode) {
+          img.decode().then(onDone).catch(onDone);
+        } else {
+          img.onload = onDone;
+          img.onerror = () => resolve(null);
+        }
+      });
     };
 
-    // 2. Load priority initial batch (next 25 frames)
-    for (let i = 1; i <= Math.min(25, TOTAL_FRAMES - 1); i++) {
-      const img = new Image();
-      img.src = getFramePath(i);
-      img.onload = () => {
-        if (!isMounted) return;
-        imagesRef.current[i] = img;
-        loaded++;
-        setLoadedCount(loaded);
-        if (currentFrameRef.current === i) {
-          renderFrame(i);
+    // 1. Initial frame 0 loads immediately for instant visual
+    loadFrame(0).then(() => {
+      if (isMounted) {
+        updateCanvasDimensions();
+        renderFrame(0);
+      }
+    });
+
+    // 2. Load remaining frames in batches of 15 pictures
+    const loadBatches = async () => {
+      let startIndex = 1;
+      while (startIndex < TOTAL_FRAMES && isMounted) {
+        // When user is scrolled past hero section, pause hero frame downloads so lower components get 100% bandwidth
+        const heroHeight = containerRef.current?.offsetHeight || 1600;
+        if (typeof window !== "undefined" && window.scrollY > heroHeight + 100) {
+          await new Promise((r) => setTimeout(r, 600));
+          continue;
         }
-      };
-    }
 
-    // 3. Load remaining frames sequentially using controlled concurrent queue
-    const loadRemaining = () => {
-      let nextIndex = 26;
+        const endIndex = Math.min(startIndex + BATCH_SIZE, TOTAL_FRAMES);
+        const batchPromises: Promise<HTMLImageElement | null>[] = [];
+        for (let i = startIndex; i < endIndex; i++) {
+          batchPromises.push(loadFrame(i));
+        }
+        await Promise.allSettled(batchPromises);
 
-      const loadNext = () => {
-        if (!isMounted || nextIndex >= TOTAL_FRAMES) return;
-
-        const currentIdx = nextIndex++;
-        const img = new Image();
-        img.src = getFramePath(currentIdx);
-        img.onload = () => {
-          if (!isMounted) return;
-          imagesRef.current[currentIdx] = img;
-          loaded++;
-          setLoadedCount(loaded);
-          if (currentFrameRef.current === currentIdx) {
-            renderFrame(currentIdx);
-          }
-          loadNext();
-        };
-        img.onerror = () => {
-          loadNext();
-        };
-      };
-
-      // Start 4 concurrent loader streams to utilize connection pool efficiently
-      for (let c = 0; c < 4; c++) {
-        loadNext();
+        // Small yield between batches to keep scrolling fluid
+        await new Promise((r) => setTimeout(r, 40));
+        startIndex = endIndex;
       }
     };
 
-    const timer = setTimeout(loadRemaining, 150);
+    const timer = setTimeout(loadBatches, 50);
 
     const handleResize = () => {
-      renderFrame(currentFrameRef.current);
+      updateCanvasDimensions();
       ScrollTrigger.refresh();
     };
 
@@ -198,7 +201,7 @@ export function CinematicHero() {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("orientationchange", handleResize);
     };
-  }, [renderFrame]);
+  }, [renderFrame, updateCanvasDimensions]);
 
   // Unified GSAP ScrollTrigger Pinned Canvas Animation Timeline (Desktop + Tablet + Mobile)
   useEffect(() => {
@@ -221,17 +224,18 @@ export function CinematicHero() {
 
     const ctx = gsap.context(() => {
       const frameSequence = { frame: 0 };
+      const isMobile = window.innerWidth < 768;
 
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: "top top",
           end: () =>
-            `+=${window.innerWidth < 768 ? Math.max(window.innerHeight * 3.6, 3200) : 3800}`,
+            `+=${isMobile ? Math.min(Math.max(window.innerHeight * 1.8, 1400), 1800) : 3400}`,
           pin: stage,
           pinSpacing: true,
-          anticipatePin: 1,
-          scrub: 1.2,
+          anticipatePin: isMobile ? 0 : 1,
+          scrub: isMobile ? 0.3 : 0.8,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             const p = self.progress;
