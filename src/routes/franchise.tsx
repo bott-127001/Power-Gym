@@ -1124,30 +1124,8 @@ function Franchise() {
 }
 
 function MarketGrowthChart() {
-  const chartRef = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const el = chartRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setInView(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <div
-      ref={chartRef}
       className="rounded-[2.5rem] glass-strong bg-carbon-deep/90 border border-border/40 p-7 sm:p-10 shadow-2xl"
     >
       <div className="flex items-center justify-between gap-2">
@@ -1161,8 +1139,8 @@ function MarketGrowthChart() {
 
       {/* Bar Chart Container with increased height */}
       <div className="mt-8 flex items-end justify-between gap-3 sm:gap-6 h-72 sm:h-88 pt-10 border-b border-border/40 pb-0">
-        {MARKET_PROJECTIONS.map((p, idx) => (
-          <MarketBar key={p.year} projection={p} active={inView} index={idx} />
+        {MARKET_PROJECTIONS.map((p) => (
+          <MarketBar key={p.year} projection={p} />
         ))}
       </div>
 
@@ -1176,68 +1154,31 @@ function MarketGrowthChart() {
 
 function MarketBar({
   projection,
-  active,
-  index,
 }: {
   projection: (typeof MARKET_PROJECTIONS)[number];
-  active: boolean;
-  index: number;
 }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!active) return;
-
-    let start = 0;
-    const end = projection.raw;
-    const duration = 1500 + index * 150;
-    const startTime = performance.now();
-
-    const frame = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      // easeOutCubic
-      const ease = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(start + (end - start) * ease);
-      setCount(current);
-
-      if (progress < 1) {
-        requestAnimationFrame(frame);
-      }
-    };
-
-    const timer = setTimeout(() => {
-      requestAnimationFrame(frame);
-    }, index * 120);
-
-    return () => clearTimeout(timer);
-  }, [active, index, projection.raw]);
-
-  const formattedCount =
-    count === 0 ? "₹0" : `₹${count.toLocaleString("en-IN")}`;
+  const formattedCount = `₹${projection.raw.toLocaleString("en-IN")}`;
 
   return (
     <div className="flex-1 flex flex-col items-center h-full justify-end group">
       {/* Number Value Label on top of bar */}
       <span
-        className={`text-[0.68rem] sm:text-sm font-mono font-bold mb-2.5 transition-all duration-700 whitespace-nowrap ${
+        className={`text-[0.68rem] sm:text-sm font-mono font-bold mb-2.5 whitespace-nowrap ${
           projection.isPeak
             ? "text-volt font-black scale-105"
             : "text-neutral-300"
-        } ${active ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
+        } opacity-100 translate-y-0`}
       >
-        {active ? formattedCount : "₹0"}
+        {formattedCount}
       </span>
 
-      {/* Bar Column with rising animation */}
+      {/* Bar Column */}
       <div className="w-full h-full flex items-end">
         <div
           style={{
-            height: active ? projection.height : "0%",
-            transitionDuration: `${1300 + index * 150}ms`,
-            transitionDelay: `${index * 120}ms`,
+            height: projection.height,
           }}
-          className={`w-full rounded-t-xl sm:rounded-t-2xl transition-all ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`w-full rounded-t-xl sm:rounded-t-2xl ${
             projection.isPeak
               ? "bg-volt shadow-md border-t-2 border-white/50"
               : "bg-linear-to-t from-white/25 via-white/75 to-white opacity-90 group-hover:opacity-100 shadow-[0_0_15px_rgba(255,255,255,0.15)]"

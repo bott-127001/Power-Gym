@@ -326,70 +326,17 @@
   animation: pulseGlow 4s ease-in-out infinite;
 }
 
-/* ───────────── RESPONSIVE SCROLL-TRIGGERED REVEAL SYSTEM ───────────── */
-.reveal {
-  opacity: 0;
-  transform: translate3d(0, 32px, 0);
-  transition:
-    opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
-}
-
-.reveal.reveal-left {
-  transform: translate3d(-36px, 0, 0);
-}
-
-.reveal.reveal-right {
-  transform: translate3d(36px, 0, 0);
-}
-
-.reveal.reveal-scale {
-  transform: scale(0.92) translate3d(0, 20px, 0);
-}
-
-.reveal.reveal-blur {
-  filter: blur(8px);
-  transform: translate3d(0, 24px, 0);
-}
-
+/* ───────────── RESPONSIVE SCROLL-TRIGGERED REVEAL SYSTEM (DISABLED) ───────────── */
+.reveal,
+.reveal.reveal-left,
+.reveal.reveal-right,
+.reveal.reveal-scale,
+.reveal.reveal-blur,
 .reveal.reveal-in {
   opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
-  filter: blur(0px);
-}
-
-/* Tablet Responsive Adjustments (≤ 1024px) */
-@media (max-width: 1024px) {
-  .reveal {
-    transform: translate3d(0, 20px, 0);
-    transition-duration: 0.6s;
-  }
-  .reveal.reveal-left {
-    transform: translate3d(-20px, 0, 0);
-  }
-  .reveal.reveal-right {
-    transform: translate3d(20px, 0, 0);
-  }
-  .reveal.reveal-scale {
-    transform: scale(0.95) translate3d(0, 14px, 0);
-  }
-}
-
-/* Mobile Responsive Adjustments (≤ 768px) */
-@media (max-width: 768px) {
-  .reveal {
-    transform: translate3d(0, 14px, 0);
-    transition-duration: 0.5s;
-  }
-  .reveal.reveal-left,
-  .reveal.reveal-right {
-    transform: translate3d(0, 14px, 0);
-  }
-  .reveal.reveal-scale {
-    transform: scale(0.97) translate3d(0, 10px, 0);
-  }
+  transform: none;
+  transition: none;
+  filter: none;
 }
 
 /* ───────────── INTERACTIVE CARD & BUTTON HOVER SYSTEM ───────────── */
