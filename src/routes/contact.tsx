@@ -8,6 +8,9 @@ import {
   ENQUIRY_GOALS,
   PHONE,
   getBranchDirectWhatsAppUrl,
+  getEnquiryTargetEmail,
+  CONTACT_EMAIL,
+  FRANCHISE_EMAIL,
   type BranchId,
 } from "../components/site";
 import { recordEnquiryFn } from "../lib/enquiry";
@@ -76,8 +79,11 @@ function Contact() {
     setServerError(null);
     setSubmitting(true);
 
+    const isFranchise = goal.toLowerCase().includes("franchise");
+    const targetEmail = getEnquiryTargetEmail(goal);
+
     try {
-      // 1. Record enquiry in Excel spreadsheet on server
+      // 1. Record enquiry in storage/backend
       const res = await recordEnquiryFn({
         data: {
           name,
@@ -90,21 +96,23 @@ function Contact() {
       });
 
       if (!res?.success) {
-        throw new Error("Could not record enquiry in spreadsheet.");
+        throw new Error("Could not record enquiry.");
       }
 
       setSubmissionId(res.submissionId);
       setSubmitting(false);
 
-      // 2. Open Gmail compose window to Contact@powerupfitness.co.in with details
+      // 2. Open Gmail compose window to target recipient
       const branchName = BRANCHES.find((b) => b.id === branchId)?.name || branchId;
       const subject = encodeURIComponent(
-        `New PowerUp Fitness Enquiry: ${name.trim()} (${branchName})`,
+        isFranchise
+          ? `PowerUp Fitness Franchise Application: ${name.trim()} (${branchName})`
+          : `New PowerUp Fitness Enquiry: ${name.trim()} (${branchName})`,
       );
       const emailLines = [
-        "Hello PowerUp Team,",
+        isFranchise ? "Hello Rohan / PowerUp Leadership Team," : "Hello PowerUp Team,",
         "",
-        "A new fitness enquiry has been submitted through the PowerUp website contact form:",
+        `A new ${isFranchise ? "franchise application" : "fitness enquiry"} has been submitted through the PowerUp website contact form:`,
         "",
         `• Name: ${name.trim()}`,
         `• Phone: +91 ${phone.trim()}`,
@@ -121,9 +129,13 @@ function Contact() {
       }
 
       emailLines.push("");
-      emailLines.push("PowerUp Fitness Concierge System");
+      emailLines.push(
+        isFranchise
+          ? "PowerUp Fitness Franchise Concierge System"
+          : "PowerUp Fitness Concierge System",
+      );
 
-      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=Contact@powerupfitness.co.in&su=${subject}&body=${encodeURIComponent(
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${targetEmail}&su=${subject}&body=${encodeURIComponent(
         emailLines.join("\n"),
       )}`;
 
@@ -133,7 +145,7 @@ function Contact() {
       console.error("Contact submission error:", err);
       setSubmitting(false);
       setServerError(
-        "We couldn't submit your enquiry right now. Please email directly to Contact@powerupfitness.co.in.",
+        `We couldn't submit your enquiry right now. Please email directly to ${targetEmail}.`,
       );
     }
   };
@@ -174,11 +186,11 @@ function Contact() {
                   <div className="flex-1">
                     <p>{serverError}</p>
                     <a
-                      href="mailto:Contact@powerupfitness.co.in"
+                      href={`mailto:${getEnquiryTargetEmail(goal)}`}
                       className="mt-2 inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-volt hover:underline text-[0.7rem]"
                     >
                       <Mail className="h-3.5 w-3.5" />
-                      Email directly to Contact@powerupfitness.co.in →
+                      Email directly to {getEnquiryTargetEmail(goal)} →
                     </a>
                   </div>
                 </div>

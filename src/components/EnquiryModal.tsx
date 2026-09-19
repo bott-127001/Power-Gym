@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { BRANCHES, ENQUIRY_GOALS, type BranchId } from "./site";
+import { BRANCHES, ENQUIRY_GOALS, getEnquiryTargetEmail, type BranchId } from "./site";
 import { recordEnquiryFn } from "../lib/enquiry";
 import { X, Sparkles, Mail, CheckCircle2, AlertCircle, ChevronDown } from "lucide-react";
 import { DumbbellSpinner } from "./GymLoaders";
@@ -134,8 +134,11 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
     setServerError(null);
     setSubmitting(true);
 
+    const isFranchise = enquiry.toLowerCase().includes("franchise");
+    const targetEmail = getEnquiryTargetEmail(enquiry);
+
     try {
-      // 1. Record enquiry in Excel spreadsheet on server
+      // 1. Record enquiry in storage/backend
       const res = await recordEnquiryFn({
         data: {
           name,
@@ -150,15 +153,17 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
       setSubmitted(true);
       setSubmitting(false);
 
-      // 2. Build email mailto link to Contact@powerupfitness.co.in
+      // 2. Build email mailto link to target recipient
       const branch = BRANCHES.find((b) => b.id === branchId) || BRANCHES[0]!;
       const subject = encodeURIComponent(
-        `New PowerUp Fitness Enquiry: ${name.trim()} (${branch.name})`,
+        isFranchise
+          ? `PowerUp Fitness Franchise Application: ${name.trim()} (${branch.name})`
+          : `New PowerUp Fitness Enquiry: ${name.trim()} (${branch.name})`,
       );
       const emailLines = [
-        "Hello PowerUp Team,",
+        isFranchise ? "Hello Rohan / PowerUp Leadership Team," : "Hello PowerUp Team,",
         "",
-        "A new fitness enquiry has been submitted through the PowerUp website popup:",
+        `A new ${isFranchise ? "franchise application" : "fitness enquiry"} has been submitted through the PowerUp website popup:`,
         "",
         `• Name: ${name.trim()}`,
         `• Phone: +91 ${phone.trim()}`,
@@ -182,9 +187,13 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
       }
 
       emailLines.push("");
-      emailLines.push("PowerUp Fitness Concierge System");
+      emailLines.push(
+        isFranchise
+          ? "PowerUp Fitness Franchise Concierge System"
+          : "PowerUp Fitness Concierge System",
+      );
 
-      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=Contact@powerupfitness.co.in&su=${subject}&body=${encodeURIComponent(
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${targetEmail}&su=${subject}&body=${encodeURIComponent(
         emailLines.join("\n"),
       )}`;
 
@@ -200,7 +209,7 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
       console.error("Enquiry submission error:", err);
       setSubmitting(false);
       setServerError(
-        "We couldn't record your enquiry right now. Please email directly to Contact@powerupfitness.co.in.",
+        `We couldn't record your enquiry right now. Please email directly to ${targetEmail}.`,
       );
     }
   };
@@ -266,11 +275,11 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
             <div className="flex-1">
               <p>{serverError}</p>
               <a
-                href="mailto:Contact@powerupfitness.co.in"
+                href={`mailto:${getEnquiryTargetEmail(enquiry)}`}
                 className="mt-2 inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-volt hover:underline text-xs"
               >
                 <Mail className="h-3.5 w-3.5" />
-                Email directly to Contact@powerupfitness.co.in →
+                Email directly to {getEnquiryTargetEmail(enquiry)} →
               </a>
             </div>
           </div>

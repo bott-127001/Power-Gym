@@ -1,5 +1,14 @@
 export const PHONE = "+91 84465 88164";
 export const WHATSAPP = "https://wa.me/918446588164";
+export const CONTACT_EMAIL = "Contact@powerupfitness.co.in";
+export const FRANCHISE_EMAIL = "rohan.pisal@powerupfitness.co.in";
+
+export function getEnquiryTargetEmail(enquiryGoalOrType?: string): string {
+  if (enquiryGoalOrType?.toLowerCase().includes("franchise")) {
+    return FRANCHISE_EMAIL;
+  }
+  return CONTACT_EMAIL;
+}
 
 export const NAV = [
   { to: "/", label: "Home" },
