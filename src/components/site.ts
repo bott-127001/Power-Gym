@@ -1,5 +1,5 @@
-export const PHONE = "+918308888008";
-export const WHATSAPP = "https://wa.me/918446588173";
+export const PHONE = "+91 84465 88164";
+export const WHATSAPP = "https://wa.me/918446588164";
 
 export const NAV = [
   { to: "/", label: "Home" },
@@ -20,8 +20,8 @@ export const BRANCHES = [
     fullName: "Bhukum Club",
     city: "Pune",
     status: "active" as const,
-    phone: "+918308888008",
-    whatsappNumber: "918446588173",
+    phone: "+91 84465 88164",
+    whatsappNumber: "918446588164",
     occupancy: "MODERATE",
     address: "Skyi Manas, Lake City, Bhukum, Maharashtra 412115",
     shortAddress: "Skyi Manas",
@@ -35,8 +35,8 @@ export const BRANCHES = [
     fullName: "Mahalunge Club",
     city: "Pune",
     status: "active" as const,
-    phone: "+918308888008",
-    whatsappNumber: "918446588174",
+    phone: "+91 84465 88164",
+    whatsappNumber: "918446588164",
     occupancy: "LOW",
     address: "21, Opp. Godrej Green Cove, near VTP Circle, Mahalunge, Pune",
     shortAddress: "Near VTP Circle",
@@ -50,8 +50,8 @@ export const BRANCHES = [
     fullName: "Baner-Sus Club",
     city: "Pune",
     status: "upcoming" as const,
-    phone: "+918308888008",
-    whatsappNumber: "918446588164",
+    phone: "+91 83088 88008",
+    whatsappNumber: "918308888008",
     occupancy: "COMING SOON",
     address: "Baner - Sus, Pune, Maharashtra",
     shortAddress: "Baner - Sus",
@@ -98,7 +98,7 @@ export function createBranchEnquiryWhatsAppUrl(details: {
       ? `Power Up ${branch.name} (Coming Soon)`
       : `Power Up ${branch.name}`;
 
-  const targetNumber = branch.whatsappNumber || "918446588173";
+  const targetNumber = branch.whatsappNumber || "918446588164";
 
   const lines = [
     "Hello PowerUp Fitness! 👋",

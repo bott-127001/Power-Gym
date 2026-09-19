@@ -3,21 +3,21 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Atmosphere } from "../components/Atmosphere";
 import { Reveal } from "../components/Reveal";
 import { PowerButton } from "../components/PowerButton";
-import { BRANCHES, WHATSAPP } from "../components/site";
+import { BRANCHES, getBranchDirectWhatsAppUrl } from "../components/site";
 import { EnquiryModal } from "../components/EnquiryModal";
-import { MapPin } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { ImageSlideshow } from "../components/ImageSlideshow";
 
 export const Route = createFileRoute("/branches")({
   head: () => ({
     meta: [
-      { title: "Our Clubs — Power Up Fitness Bhukum & Mahalunge" },
+      { title: "Our Clubs — Power Up Fitness Bhukum, Mahalunge & Baner" },
       {
         name: "description",
         content:
-          "Two premium Power Up Fitness clubs in Pune — Bhukum and Mahalunge. Resistance training, functional zones, recovery and expert coaching.",
+          "Power Up Fitness clubs in Pune — Bhukum, Mahalunge, and Baner-Sus. Resistance training, functional zones, recovery and expert coaching.",
       },
-      { property: "og:title", content: "Our Clubs — Power Up Fitness Bhukum & Mahalunge" },
+      { property: "og:title", content: "Our Clubs — Power Up Fitness Bhukum, Mahalunge & Baner" },
       { property: "og:description", content: "Find the nearest ultimate fitness club in Pune." },
     ],
   }),
@@ -117,6 +117,19 @@ function Branches() {
                           </a>
                         )}
                       </p>
+
+                      {b.phone && (
+                        <div className="mt-3.5 flex items-center gap-2">
+                          <Phone className="h-4 w-4 text-volt shrink-0" />
+                          <a
+                            href={`tel:${b.phone.replace(/\s+/g, "")}`}
+                            className="font-mono text-sm sm:text-base font-bold text-volt hover:underline transition-colors"
+                          >
+                            {b.phone}
+                          </a>
+                        </div>
+                      )}
+
                       <ul className="mt-6 flex flex-wrap gap-2">
                         {FEATURES.map((f) => (
                           <li
@@ -139,6 +152,14 @@ function Branches() {
                           >
                             Register Interest
                           </PowerButton>
+                          {b.phone && (
+                            <PowerButton
+                              href={`tel:${b.phone.replace(/\s+/g, "")}`}
+                              variant="slab"
+                            >
+                              Call Club
+                            </PowerButton>
+                          )}
                           {b.maps && (
                             <PowerButton href={b.maps} variant="ghost">
                               Directions
@@ -147,7 +168,17 @@ function Branches() {
                         </>
                       ) : (
                         <>
-                          <PowerButton href={WHATSAPP}>Book free trial</PowerButton>
+                          <PowerButton href={getBranchDirectWhatsAppUrl(b.id)}>
+                            Book free trial
+                          </PowerButton>
+                          {b.phone && (
+                            <PowerButton
+                              href={`tel:${b.phone.replace(/\s+/g, "")}`}
+                              variant="slab"
+                            >
+                              Call Club
+                            </PowerButton>
+                          )}
                           {b.maps && (
                             <PowerButton href={b.maps} variant="ghost">
                               Directions

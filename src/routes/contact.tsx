@@ -20,7 +20,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Book a free trial at Power Up Fitness Bhukum or Mahalunge. Call +91 83088 88008 or send us your goal and we'll be in touch.",
+          "Book a free trial at Power Up Fitness Bhukum or Mahalunge. Call +91 84465 88164 or send us your goal and we'll be in touch.",
       },
       { property: "og:title", content: "Contact & Free Trial — Power Up Fitness Pune" },
       {
@@ -96,7 +96,7 @@ function Contact() {
       setSubmissionId(res.submissionId);
       setSubmitting(false);
 
-      // 2. Open Gmail compose window to pisal.rohan@gmail.com with details
+      // 2. Open Gmail compose window to Contact@powerupfitness.co.in with details
       const branchName = BRANCHES.find((b) => b.id === branchId)?.name || branchId;
       const subject = encodeURIComponent(
         `New PowerUp Fitness Enquiry: ${name.trim()} (${branchName})`,
@@ -123,7 +123,7 @@ function Contact() {
       emailLines.push("");
       emailLines.push("PowerUp Fitness Concierge System");
 
-      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=pisal.rohan@gmail.com&su=${subject}&body=${encodeURIComponent(
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=Contact@powerupfitness.co.in&su=${subject}&body=${encodeURIComponent(
         emailLines.join("\n"),
       )}`;
 
@@ -133,7 +133,7 @@ function Contact() {
       console.error("Contact submission error:", err);
       setSubmitting(false);
       setServerError(
-        "We couldn't submit your enquiry right now. Please email directly to pisal.rohan@gmail.com.",
+        "We couldn't submit your enquiry right now. Please email directly to Contact@powerupfitness.co.in.",
       );
     }
   };
@@ -174,11 +174,11 @@ function Contact() {
                   <div className="flex-1">
                     <p>{serverError}</p>
                     <a
-                      href="mailto:pisal.rohan@gmail.com"
+                      href="mailto:Contact@powerupfitness.co.in"
                       className="mt-2 inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-volt hover:underline text-[0.7rem]"
                     >
                       <Mail className="h-3.5 w-3.5" />
-                      Email directly to pisal.rohan@gmail.com →
+                      Email directly to Contact@powerupfitness.co.in →
                     </a>
                   </div>
                 </div>

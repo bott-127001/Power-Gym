@@ -17,6 +17,7 @@ import {
   CheckCircle2,
   AlertCircle,
   MessageCircle,
+  Mail,
   Send,
   Sparkles,
   ArrowRight,
@@ -270,23 +271,54 @@ function Franchise() {
           branchId: "bhukum",
           enquiry: "Franchise Opportunity / Partnership",
           message: fullNote,
-          source: "Franchise Prospectus Page",
+          source: "franchise-page",
         },
       });
 
-      if (!res?.success || !res?.whatsappUrl) {
+      if (!res?.success) {
         throw new Error("Could not record franchise enquiry.");
       }
 
       setSubmissionId(res.submissionId);
       setSubmitting(false);
 
-      window.open(res.whatsappUrl, "_blank", "noopener,noreferrer");
+      // Open Gmail compose window to rohan.pisal@powerupfitness.co.in with details
+      const subject = encodeURIComponent(
+        `PowerUp Fitness Franchise Application: ${name.trim()} (${city.trim() || "Pune"})`,
+      );
+      const emailLines = [
+        "Hello Rohan / PowerUp Leadership Team,",
+        "",
+        "A new franchise application has been submitted through the PowerUp website:",
+        "",
+        `• Name: ${name.trim()}`,
+        `• Phone: +91 ${phone.trim()}`,
+        `• Target City/Area: ${city.trim() || "Not specified"}`,
+        `• Launch Timeline: ${timeline}`,
+      ];
+
+      if (message.trim()) {
+        emailLines.push(`• Background / Property Notes: ${message.trim()}`);
+      }
+
+      if (res?.submissionId) {
+        emailLines.push(`• Reference ID: ${res.submissionId}`);
+      }
+
+      emailLines.push("");
+      emailLines.push("PowerUp Fitness Franchise Concierge System");
+
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=rohan.pisal@powerupfitness.co.in&su=${subject}&body=${encodeURIComponent(
+        emailLines.join("\n"),
+      )}`;
+
+      // Open Gmail in a new tab
+      window.open(gmailUrl, "_blank", "noopener,noreferrer");
     } catch (err: any) {
       console.error("Franchise submission error:", err);
       setSubmitting(false);
       setServerError(
-        "We couldn't submit your franchise enquiry right now. Please try again or reach out on WhatsApp.",
+        "We couldn't submit your franchise enquiry right now. Please email directly to rohan.pisal@powerupfitness.co.in.",
       );
     }
   };
@@ -924,20 +956,18 @@ function Franchise() {
                   <div className="flex-1">
                     <p>{serverError}</p>
                     <a
-                      href="https://wa.me/919923899499"
-                      target="_blank"
-                      rel="noreferrer"
+                      href="mailto:rohan.pisal@powerupfitness.co.in"
                       className="mt-2 inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-volt hover:underline text-[0.7rem]"
                     >
-                      <MessageCircle className="h-3.5 w-3.5" />
-                      Connect directly on WhatsApp →
+                      <Mail className="h-3.5 w-3.5" />
+                      Email directly to rohan.pisal@powerupfitness.co.in →
                     </a>
                   </div>
                 </div>
               )}
 
               {submissionId && (
-                <div className="mt-6 rounded-2xl border border-volt/40 bg-volt/10 p-4 text-xs text-foreground flex items-start gap-2.5">
+                <div className="mt-6 rounded-2xl border border-volt/40 bg-volt/10 p-4 text-xs text-foreground flex items-start gap-2.5 animate-scale-up">
                   <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5 text-volt" />
                   <div className="flex-1">
                     <p className="font-semibold text-volt">Franchise Application Recorded!</p>
@@ -946,8 +976,7 @@ function Franchise() {
                       <span className="font-mono text-foreground font-bold">{submissionId}</span>
                     </p>
                     <p className="mt-1 text-muted-foreground">
-                      WhatsApp has been launched with your enquiry details. We look forward to
-                      partnering.
+                      Your prefilled email has opened in Gmail. We look forward to partnering.
                     </p>
                   </div>
                 </div>
@@ -1048,7 +1077,7 @@ function Franchise() {
                 <span className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
                 <span className="relative flex items-center justify-center gap-2">
                   {submitting ? (
-                    <span>Saving & Opening WhatsApp...</span>
+                    <span>Saving & Opening Email...</span>
                   ) : (
                     <>
                       <span>Apply as Franchise Partner</span>
@@ -1059,8 +1088,7 @@ function Franchise() {
               </button>
 
               <p className="mt-3 text-center text-[0.65rem] text-muted-foreground/80">
-                Records your enquiry in our verified spreadsheet and connects you directly with our
-                leadership team on WhatsApp.
+                Records your enquiry and connects you directly with our leadership team over email.
               </p>
             </form>
           </Reveal>
@@ -1089,6 +1117,15 @@ function Franchise() {
                       className="font-bold text-white hover:text-volt transition-colors"
                     >
                       +91 99238 99499
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-4 w-4 text-volt" />
+                    <a
+                      href="mailto:rohan.pisal@powerupfitness.co.in"
+                      className="font-bold text-white hover:text-volt transition-colors"
+                    >
+                      rohan.pisal@powerupfitness.co.in
                     </a>
                   </div>
                   <div className="flex items-center gap-3">

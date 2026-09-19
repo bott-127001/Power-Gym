@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { BRANCHES, NAV, PHONE } from "./site";
+import { BRANCHES, NAV } from "./site";
+import { Phone } from "lucide-react";
 
 export function Footer() {
   return (
@@ -36,9 +37,10 @@ export function Footer() {
                   <p className="mt-1 text-sm sm:text-base leading-relaxed">{b.address}</p>
                   {b.phone && (
                     <a
-                      href={`tel:${b.phone}`}
-                      className="mt-1.5 block font-mono text-sm sm:text-base text-volt hover:underline"
+                      href={`tel:${b.phone.replace(/\s+/g, "")}`}
+                      className="mt-1.5 inline-flex items-center gap-2 font-mono text-sm sm:text-base text-volt hover:underline"
                     >
+                      <Phone className="h-3.5 w-3.5 shrink-0" />
                       {b.phone}
                     </a>
                   )}

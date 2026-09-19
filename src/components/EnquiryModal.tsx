@@ -105,7 +105,7 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
     };
   }, [isOpen, onClose]);
 
-  // Form submission handler: Records in Excel & routes to pisal.rohan@gmail.com
+  // Form submission handler: Records in Excel & routes to Contact@powerupfitness.co.in
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -150,7 +150,7 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
       setSubmitted(true);
       setSubmitting(false);
 
-      // 2. Build email mailto link to pisal.rohan@gmail.com
+      // 2. Build email mailto link to Contact@powerupfitness.co.in
       const branch = BRANCHES.find((b) => b.id === branchId) || BRANCHES[0]!;
       const subject = encodeURIComponent(
         `New PowerUp Fitness Enquiry: ${name.trim()} (${branch.name})`,
@@ -184,7 +184,7 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
       emailLines.push("");
       emailLines.push("PowerUp Fitness Concierge System");
 
-      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=pisal.rohan@gmail.com&su=${subject}&body=${encodeURIComponent(
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=Contact@powerupfitness.co.in&su=${subject}&body=${encodeURIComponent(
         emailLines.join("\n"),
       )}`;
 
@@ -200,7 +200,7 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
       console.error("Enquiry submission error:", err);
       setSubmitting(false);
       setServerError(
-        "We couldn't record your enquiry right now. Please email directly to pisal.rohan@gmail.com.",
+        "We couldn't record your enquiry right now. Please email directly to Contact@powerupfitness.co.in.",
       );
     }
   };
@@ -266,11 +266,11 @@ export function EnquiryModal({ isOpen, onClose }: EnquiryModalProps) {
             <div className="flex-1">
               <p>{serverError}</p>
               <a
-                href="mailto:pisal.rohan@gmail.com"
+                href="mailto:Contact@powerupfitness.co.in"
                 className="mt-2 inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-volt hover:underline text-xs"
               >
                 <Mail className="h-3.5 w-3.5" />
-                Email directly to pisal.rohan@gmail.com →
+                Email directly to Contact@powerupfitness.co.in →
               </a>
             </div>
           </div>
