@@ -95,7 +95,7 @@ const TAILWINDS = [
 const LOCATIONS = [
   { num: "01", name: "Bhukum Club", status: "Active Club · Prime Catchment" },
   { num: "02", name: "Mahalunge Club", status: "Active Club · High Density Hub" },
-  { num: "03", name: "Baner-Sus Club", status: "Upcoming Club · Coming Soon" },
+  { num: "03", name: "Baner-Sus Club", status: "Active Club · Prime Growth Corridor" },
 ];
 
 const OFFERINGS = [
@@ -525,15 +525,15 @@ function Franchise() {
                   <span className="text-volt">BUILT IN PUNE&apos;S PRIME REGION</span>
                 </h2>
                 <p className="mt-6 text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  PowerUp Fitness has established two thriving flagship gyms in Bhukum and
-                  Mahalunge, with our third club upcoming in Baner-Sus, Pune — from strength,
+                  PowerUp Fitness has established three thriving flagship gyms in Bhukum,
+                  Mahalunge, and Baner-Sus, Pune — from strength,
                   cardio and CrossFit to personal training, recovery, nutrition, and a healthy
                   café, all under expert coaching. Our mission: make results-driven fitness
                   affordable and accessible.
                 </p>
               </Reveal>
 
-              {/* 3 Footprint Locations (2 Active + 1 Upcoming) */}
+              {/* 3 Footprint Locations (3 Active Clubs) */}
               <div className="mt-10 grid gap-4 sm:grid-cols-3">
                 {LOCATIONS.map((loc) => {
                   const isUpcoming = loc.status.includes("Upcoming");

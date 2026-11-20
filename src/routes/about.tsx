@@ -145,9 +145,9 @@ function About() {
               where every member feels empowered, challenged, and supported by a world-class team.
             </p>
             <p className="mt-5 leading-relaxed text-sm sm:text-base text-muted-foreground">
-              Operating across Pune in <span className="text-foreground font-semibold">Bhukum</span>{" "}
-              and <span className="text-foreground font-semibold">Mahalunge</span>, with our upcoming
-              flagship at <span className="text-foreground font-semibold">Baner-Sus</span>, our clubs
+              Operating across Pune in <span className="text-foreground font-semibold">Bhukum</span>,{" "}
+              <span className="text-foreground font-semibold">Mahalunge</span>, and our flagship club at{" "}
+              <span className="text-foreground font-semibold">Baner-Sus</span>, our clubs
               offer world-class equipment, certified coaches, and an electric community atmosphere.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">

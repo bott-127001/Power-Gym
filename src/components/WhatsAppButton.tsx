@@ -65,7 +65,7 @@ export function WhatsAppButton() {
             Select your nearest club to start a direct chat with our team:
           </p>
 
-          {/* PowerUp Branches (2 Active + 1 Upcoming) */}
+          {/* PowerUp Branches (3 Active Clubs) */}
           <div className="mt-3 space-y-2">
             {BRANCHES.map((b) => {
               const isUpcoming = b.status === "upcoming";

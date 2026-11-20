@@ -21,7 +21,7 @@ export const NAV = [
 import facility from "../assets/facility.jpg";
 import hero from "../assets/hero.jpg";
 
-// ───────────── POWERUP BRANCHES (2 ACTIVE + 1 UPCOMING) ─────────────
+// ───────────── POWERUP BRANCHES (3 ACTIVE CLUBS) ─────────────
 export const BRANCHES = [
   {
     id: "bhukum",
@@ -58,10 +58,10 @@ export const BRANCHES = [
     name: "Baner-Sus",
     fullName: "Baner-Sus Club",
     city: "Pune",
-    status: "upcoming" as const,
-    phone: "+91 83088 88008",
-    whatsappNumber: "918308888008",
-    occupancy: "COMING SOON",
+    status: "active" as const,
+    phone: "+91 84465 88164",
+    whatsappNumber: "918446588164",
+    occupancy: "MODERATE",
     address: "Baner - Sus, Pune, Maharashtra",
     shortAddress: "Baner - Sus",
     maps: "https://maps.google.com/?q=Power+Up+Fitness+Baner+Sus+Pune",
