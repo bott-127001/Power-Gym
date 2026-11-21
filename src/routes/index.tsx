@@ -221,17 +221,17 @@ function Index() {
                 <div className="grid grid-cols-2 gap-4 border-y border-border/30 py-6">
                   <div>
                     <p className="text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
-                      Status
+                      Timing
                     </p>
-                    <p className="mt-1 font-display text-2xl text-foreground">
-                      {branch.status === "upcoming" ? "Coming Soon" : "6 AM – 12 AM"}
+                    <p className="mt-1 font-display text-xl sm:text-2xl text-foreground">
+                      {branch.status === "upcoming" ? "Coming Soon" : "5:30 AM – 11 PM"}
                     </p>
                   </div>
                   <div>
                     <p className="text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
                       Coaches
                     </p>
-                    <p className="mt-1 font-display text-2xl text-volt">Certified</p>
+                    <p className="mt-1 font-display text-xl sm:text-2xl text-volt">Certified</p>
                   </div>
                 </div>
 
